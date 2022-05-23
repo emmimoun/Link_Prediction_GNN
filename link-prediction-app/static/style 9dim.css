@@ -1,0 +1,203 @@
+
+* {
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.make-space {
+    margin: 20px;
+}
+
+#top1 {
+    width: 10%;
+    float: left;
+    padding: 2%;
+}
+
+#page-icon {
+    width: 50px;
+    height: 50px;
+
+}
+
+#top2 {
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+
+#top3 {
+    float: left;
+    width: 40%;
+    padding: 15px;
+}
+
+/* navbar */
+/* Add a black background color to the top navigation */
+.topnav {
+    border-radius: 5px;
+    background-color: rgb(4, 49, 45);
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 10%;
+    margin: 2px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+/**/
+/**/
+.row {
+    clear: left;
+}
+
+.div-left {
+    float: left;
+    width: 50%;
+    padding: 15px;
+    text-align: center;
+}
+
+.div-right {
+    float: left;
+    width: 50%;
+    padding: 15px;
+    text-align: center;
+}
+
+/* parametres div */
+
+.accordion {
+    background-color: #ddd;
+    border-radius: 5px;
+    ;
+    color: #444;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion.active {
+    background-color: #00ff40;
+}
+
+.accordion:hover {
+    background-color: #52527a;
+    color: whitesmoke;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+    /* to manipulate with JS*/
+    overflow: hidden;
+}
+
+button.accordion:after {
+    content: '\02795';
+    /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion.active:after {
+    content: "\2796";
+    /* Unicode character for "minus" sign (-) */
+}
+
+/* parametres div */
+.command {
+    width: 100%;
+    padding: 20px;
+    border: 2px solid #dfdfe7;
+    border-radius: 5px;
+    margin: 20px 0px;
+    background-color: #d6d6c2;
+}
+
+.visualisation {
+    width: 45%;
+    float: left;
+    /*background-color: #ccc ;*/
+    border: 2px solid #29293d;
+    border-radius: 10px;
+    height: 800px;
+    margin: 2.5%;
+}
+
+
+
+/****************************************************************************************************/
+/*node infos*/
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    height: 30;
+    padding: 2px;
+    font: 15px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+/*link info*/
+div.linkdiv {
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    height: 30;
+    padding: 2px;
+    font: 15px sans-serif;
+    background: #04AA6D;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+/*node style*/
+circle.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+    border-width: 2px;
+
+}
+
+/*link style*/
+line.link {
+    stroke-opacity: 0.5;
+    stroke-width: 2px;
+}
+
+

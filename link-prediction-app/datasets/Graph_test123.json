@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": false, "graph": {}, "nodes": [{"name":2,"degree":1},{"name":3,"degree":1},{"name":4,"degree":1},{"name":5,"degree":1}],"links": [ {"source": 0, "target": 1, "instance": 0},{"source": 1, "target": 3, "instance": 0}] }

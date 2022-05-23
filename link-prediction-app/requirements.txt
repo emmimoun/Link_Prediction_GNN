@@ -1,0 +1,10 @@
+IPython
+flask_mysqldb
+neo4j
+pandas
+numpy
+torch
+sklearn
+networkx
+matplotlib
+Flask

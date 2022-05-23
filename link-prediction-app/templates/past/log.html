@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <title>Link Prediction app - Login</title>
+
+</head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<body>
+    <div class="container-fluid">
+        <div id="top-bar" style="margin-top: 5%;">
+            <div id="top1"><img id="page-icon" src="{{ url_for('static', filename='img/network.png') }}"
+                    alt="network icon">
+            </div>
+            <div id="top2">
+                <h1 id="titre">Link Prediction Log</h1>
+            </div>
+            <div class="topnav" id="top3">
+                <a href="{{url_for('home')}}">Home</a>
+                <a href="#guide">Guide</a>
+                <a href="#contact">Contact</a>
+                <a href="#" class="">Login</a>
+                <a href="#" class="active">Log consultation</a>
+            </div>
+        </div>
+        <table>
+  <tr>
+    <th>Name</th>
+    <th>Action</th>
+    <th>Time</th>
+    <th>Type</th>
+    <th>Duration</th>
+  </tr>
+  <tr>
+    <td>admin1</td>
+    <td>add database</td>
+    <td>12/03/2022 - 14:25:52</td>
+    <td>database</td>
+    <td>38s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+    <td>add database</td>
+    <td>18/03/2022 - 09:25:52</td>
+    <td>database</td>
+    <td>40s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+      <td>add database</td>
+    <td>18/03/2022 - 09:29:52</td>
+    <td>database</td>
+    <td>37s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+      <td>delete database</td>
+    <td>18/03/2022 - 10:56:06</td>
+    <td>database</td>
+    <td>15s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+    <td>run link prediction</td>
+    <td>24/03/2022- 19:37:46</td>
+    <td>database</td>
+    <td>10min 23s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+      <td>add user</td>
+      <td>24/03/2022 - 20:39:52</td>
+      <td>users</td>
+      <td>7s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+      <td>add database</td>
+    <td>28/03/2022 - 21:49:06</td>
+    <td>database</td>
+    <td>58s</td>
+  </tr>
+  <tr>
+    <td>admin1</td>
+    <td>run simulation</td>
+    <td>05/04/2022- 19:37:46</td>
+    <td>database</td>
+    <td>10min 23s</td>
+  </tr>
+</table>
+        <!--<div class="row col-6 mx-auto">
+            {% if correct %}
+            <div class="alert alert-warning" role="alert">
+               Check out your information, please!
+              </div>
+            {% endif %}
+            <form method="POST" action="{{url_for('login')}}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary ">Submit</button>
+                </div>
+
+            </form>
+        </div>-->
+    </div>
+
+
+
+
+
+
+    <script src="{{url_for('static',filename='js/d3.v3.js')}}"></script>
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <script src="{{url_for('static',filename='js/jQuery.js')}}"></script>
+
+
+</body>
+
+</html>

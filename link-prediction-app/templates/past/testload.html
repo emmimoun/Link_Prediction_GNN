@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn1" onclick="load_graph()">Load file</button>
+    <script src="{{url_for('static',filename='js/jQuery.js')}}"></script>
+    <script>
+        var G;
+        var nodeArray;
+        var edgeArray;
+        function load_graph() {
+            $.ajax({
+                dataType: "json",
+                url: "/get_graph",
+                data: "G4",
+                success: function (result, status, xhr) {
+                    G = result;
+                    nodeArray = G.nodes;
+                    edgeArray = G.links;
+                }
+            });
+
+        }
+         /*
+            // nodes , edges , deg
+            for (i in nodeArray) {
+                kArray[nodeArray[i].name] = 0;
+                nodeArray[i].Adj = [];
+            }
+            for (i in edgeArray) {
+                s = edgeArray[i].source;
+                t = edgeArray[i].target;
+                kArray[s]++;
+                kArray[t]++;
+                nodeArray[s].Adj[nodeArray[s].Adj.length] = t;//add new adjacent
+                nodeArray[t].Adj[nodeArray[t].Adj.length] = s;//add new adjacent
+            }
+            for(i in kArray){
+                console.log(kArray[i]);
+            }
+            var MaxDeg = 0;
+            for (i in nodeArray) {
+                nodeArray[i].k = kArray[i];//ajouter degree in nodeArray object
+                if (MaxDeg < nodeArray[i].k) {
+                    MaxDeg = nodeArray[i].k;
+                }
+            }
+            */
+    </script>
+</body>
+
+</html>

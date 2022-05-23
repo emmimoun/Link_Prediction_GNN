@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='styleAwesome.css') }}">
+	</head>
+	<body class="loggedin">
+		<nav class="navtop">
+			<div>
+				<h1>Link Prediction</h1>
+				<a href="{{ url_for('index') }}">Prediction & Visualisation</a>
+				<a href="{{ url_for('profile') }}">Profile</a>
+				<a href="{{ url_for('add_graph') }}">Add Graph</a>
+				<a href="{{ url_for('register') }}"></i>Add User</a>
+				<a href="{{ url_for('logout') }}">Logout</a>
+			</div>
+		</nav>
+		<div class="content">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>

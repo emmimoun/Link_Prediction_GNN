@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <title>Link Prediction app - Administration</title>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="top-bar" style="margin-top: 5%;">
+            <div id="top1"><img id="page-icon" src="{{ url_for('static', filename='img/network.png') }}"
+                    alt="network icon">
+            </div>
+            <div id="top2">
+                <h1 id="titre">Link Prediction demo</h1>
+            </div>
+            <div class="topnav" id="top3">
+                <a href="{{url_for('home')}}">Home</a>
+                <a href="#guide">Guide</a>
+                <a href="#contact">Contact</a>
+                <a href="#" class="active">Login</a>
+            </div>
+        </div>
+        <div class="row col-6 mx-auto">
+            {% if correct %}
+            <div class="alert alert-warning" role="alert">
+               Check out your information, please!
+              </div>
+            {% endif %}
+            
+        </div>
+    </div>
+
+
+
+
+
+
+    <script src="{{url_for('static',filename='js/d3.v3.js')}}"></script>
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <script src="{{url_for('static',filename='js/jQuery.js')}}"></script>
+
+
+</body>
+
+</html>

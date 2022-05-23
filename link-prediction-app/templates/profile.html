@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+<p>Welcome back, {{ account['username'] }}, Good to see you again!</p>
+
+<h2>Profile page ( {{ account['username'] }} )</h2>
+<div>
+    <p>Your account details are below:</p>
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td>{{ account['username'] }}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>*****</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ account['email'] }}</td>
+        </tr>
+    </table>
+
+</div>
+
+<h2>You can see the historic of users' actions </h2>
+
+<div>
+
+    <table class="tb">
+      <tr>
+        <th>Name</th>
+        <th>Action</th>
+        <th>Time</th>
+        <th>Type</th>
+        <th>Email</th>
+      </tr>
+      {%for row in historique%}
+      <tr>
+        <td>{{row['username']}}</td>
+        <td>{{row['action']}}</td>
+        <td>{{row['the_time']}}</td>
+        <td>{{row['type_d_action']}}</td>
+        <td>{{row['email']}}</td>
+      </tr>
+      {%endfor%}
+      
+      </table>
+</div>
+
+
+<h2>You can see all available graphs!</h2>
+
+<div>
+
+    <table class="tb">
+      <tr>
+        <th>Created By</th>
+        <th>graph</th>
+        <th>Time</th>
+        <th>Last Update</th>
+      </tr>
+      {%for row in graphs%}
+      <tr>
+        <td>{{row['username']}}</td>
+        <td>{{row['nom_de_base_de_donnes']}}</td>
+        <td>{{row['date_de_creation']}}</td>
+        <td>{{row['date_de_derniere_modification']}}</td>
+      </tr>
+      {%endfor%}
+      
+      </table>
+</div>
+
+{% endblock %}

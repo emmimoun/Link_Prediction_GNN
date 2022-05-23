@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Add Graph</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styleAwesome.css') }}">
+</head>
+
+<body>
+	
+
+	<div class="register">
+		<h1>Add Graph</h1>
+		<div class="links">
+			<a href="{{ url_for('profile') }}">Profile</a>
+			<a href="{{ url_for('add_graph') }}" class="active">Add Graph</a>
+		</div>
+		<form action="{{ url_for('add_graph') }}" method="post" autocomplete="off">
+
+			<label for="graphname">
+			</label>
+			<input type="text" name="graphname" placeholder="Graph Name" id="graphname" required>
+
+			<label for="nodes_file"> Select a nodes file to upload</label>
+
+			<input placeholder="Graph Name" type="file" name="nodes_file" value="nodes_file" id="nodes_file"> 
+			
+			<label for="edges_file"> Select an edges file to upload</label>
+
+			<input placeholder="Graph Name" type="file" name="edges_file" value="edges_file" id="edges_file"> 
+			
+			<div class="msg">{{ msg }}</div>
+			<input type="submit" value="Add Graph">
+		</form>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<title>Link Prediction app</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+		}
+
+		.make-space {
+			margin: 20px;
+		}
+
+		#top1 {
+			width: 10%;
+			float: left;
+			padding: 2%;
+		}
+
+		#page-icon {
+			width: 50px;
+			height: 50px;
+
+		}
+
+		#top2 {
+			float: left;
+			width: 50%;
+			text-align: center;
+		}
+
+		#top3 {
+			float: left;
+			width: 40%;
+			padding: 15px;
+		}
+
+		/* navbar */
+		/* Add a black background color to the top navigation */
+		.topnav {
+			border-radius: 5px;
+			background-color: rgb(4, 49, 45);
+			overflow: hidden;
+		}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+			float: left;
+			color: #f2f2f2;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-size: 17px;
+			border-radius: 10%;
+			margin: 2px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+			background-color: #ddd;
+			color: black;
+
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+			background-color: #04AA6D;
+			color: white;
+		}
+
+		/**/
+		/**/
+		.row {
+			clear: left;
+		}
+
+		.div-left {
+			float: left;
+			width: 50%;
+			padding: 15px;
+			text-align: center;
+		}
+
+		.div-right {
+			float: left;
+			width: 50%;
+			padding: 15px;
+			text-align: center;
+		}
+
+		/* parametres div */
+
+		.accordion {
+			background-color: #ddd;
+			border-radius: 5px;
+			;
+			color: #444;
+			font-weight: bold;
+			cursor: pointer;
+			padding: 18px;
+			width: 100%;
+			text-align: left;
+			border: none;
+			outline: none;
+			transition: 0.4s;
+		}
+
+		/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+		.accordion.active {
+			background-color: #00ff40;
+		}
+
+		.accordion:hover {
+			background-color: #52527a;
+			color: whitesmoke;
+		}
+
+		/* Style the accordion panel. Note: hidden by default */
+		.panel {
+			padding: 0 18px;
+			background-color: whitesmoke;
+			display: none;
+			/* to manipulate with JS*/
+			overflow: hidden;
+			border: 1px #444;
+		}
+
+		button.accordion:after {
+			content: '\02795';
+			/* Unicode character for "plus" sign (+) */
+			font-size: 13px;
+			color: #777;
+			float: right;
+			margin-left: 5px;
+		}
+
+		.accordion.active:after {
+			content: "\2796";
+			/* Unicode character for "minus" sign (-) */
+		}
+
+		/* parametres div */
+		.command {
+			width: 100%;
+			padding: 20px;
+			border: 2px solid #dfdfe7;
+			border-radius: 5px;
+			margin: 20px 0px;
+			background-color: #d6d6c2;
+		}
+
+		.visualisation1 {
+			width: 40%;
+			float: left;
+			/*background-color: #ccc ;*/
+			border: 2px solid #29293d;
+			border-radius: 10px;
+			height: 700px;
+
+		}
+
+		.visualisation2 {
+			width: 40%;
+			float: right;
+			/*background-color: #ccc ;*/
+			border: 2px solid #29293d;
+			border-radius: 10px;
+			height: 700px;
+		}
+
+
+
+		/****************************************************************************************************/
+		/*node infos*/
+		div.tooltip {
+			position: absolute;
+			text-align: center;
+			width: 150px;
+			height: 30;
+			padding: 2px;
+			font: 15px sans-serif;
+			background: lightsteelblue;
+			border: 0px;
+			border-radius: 8px;
+			pointer-events: none;
+		}
+
+		/*link info*/
+		div.linkdiv {
+			position: absolute;
+			text-align: center;
+			width: 150px;
+			height: 30;
+			padding: 2px;
+			font: 15px sans-serif;
+			background: #04AA6D;
+			border: 0px;
+			border-radius: 8px;
+			pointer-events: none;
+		}
+
+		/*node style*/
+		circle.node {
+			stroke: #fff;
+			stroke-width: 1.5px;
+			border-width: 2px;
+
+		}
+
+		/*link style*/
+		line.link {
+			stroke-opacity: 0.5;
+			stroke-width: 2px;
+		}
+
+		section#counters {
+		   font-size: 20px;
+		   float: left;
+		   margin: 10px;
+		}
+		span#count_S, span#count_I, span#count_R ,span#count_SO,span#count_DO{
+		 font-size: 48px;
+		 font-weight: bold;
+		 margin: 30px;
+		}
+
+		line.link:hover, .link:hover {
+  stroke: #f00 !important;
+  stroke-opacity: 1.0;
+  z-index: 9 !important;
+  cursor: pointer;
+}
+#macroStatsViewSelected li span {
+  /*color: #00FFFF;*/
+  color: #FFF;
+}
+
+
+
+
+/*                 TOOLBAR                   */ 
+ul.stat-list {
+	list-style-type: none;
+	display: inline-block;
+
+	text-rendering: geometricPrecision !important;
+	-webkit-font-smoothing: antialiased !important;
+	shape-rendering: geometricPrecision !important;
+	font-smoothing: always !important;
+	font-smooth: always !important;
+	/*font-family: "Open Sans", */
+	font-family: "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif !important;
+	
+	text-rendering: geometricPrecision !important;
+	margin: 0px;
+	 /*!important;*/
+	padding: 0px;
+	 /*!important;*/
+	/*height: inherit;*/
+	height: 12px;
+	top: 0 !important;
+	color: #FFF;
+	font-weight: lighter;
+	line-height: 100% !important;
+	clear: both;
+}
+
+ul.stat-list li {
+	display: inline-block;
+	vertical-align: middle !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	margin:0px !important;
+	margin-top: -2px !important;
+	min-width: 10px;
+	color: #FFF;
+}
+
+ul.stat-list li:last-child {
+	margin-left: 6px !important;
+	clear: both;
+}
+
+.stat {
+	text-align: center;
+	color: #FFF;
+	font-weight: normal;
+	width: auto;
+	clear: both;
+}
+.stat-name {
+	text-align: left !important;
+	width: 105px !important;
+	overflow:hidden !important;
+	color: #FFF;
+	font-style:lighter;
+	-webkit-font-smoothing: subpixel-antialiased !important;
+	text-rendering: optimizeLegibility !important; 
+	font-family: "Open Sans","Lato","ProximaNova","Lato","Helvetica Neue", sans-serif !important;
+	letter-spacing: 0.04em;
+	shape-rendering: geometricPrecision !important;
+}
+.stat-count {
+	text-align: right !important;
+	border-radius: 0px !important;
+	color: #A9FF00 !important;
+	font-weight: bolder !important;
+	background-color: none !important;
+}
+.stat-max {
+	font-weight: normal !important;
+	color: #FFF !important;
+	text-align: center !important;
+}
+.stat-max:hover {
+	color: #FF0000 !important;
+	font-weight: bolder !important;
+}
+
+
+
+
+.stat-basic {
+	color: #FFF;
+	font-family: 'Lucida Grande', "Open Sans", "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: subpixel-antialiased !important;
+	text-rendering: optimizeLegibility !important;
+	letter-spacing: 0.04em;
+	shape-rendering: geometricPrecision !important;
+}
+.stat-name-basic {
+	font-family: "Open Sans", "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif !important;
+	-webkit-font-smoothing: subpixel-antialiased !important;
+	text-rendering: optimizeLegibility !important;
+	color: #FFF;
+	font-weight: lighter !important;
+	letter-spacing: 0.04em !important;
+	shape-rendering: geometricPrecision !important;
+}
+.stat-count-basic {
+	color: #A9FF00 !important;
+	font-weight: bolder !important;
+	letter-spacing: 0.04em !important;
+	font-family: "ProximaNova","Helvetica Neue", sans-serif !important;
+}
+.stat-max-basic {
+	font-weight: lighter !important;
+	font-family: "ProximaNova","Helvetica Neue", sans-serif !important;
+	color: #FFF !important;
+}
+.stat-mean-basic {
+	font-family: "ProximaNova","Helvetica Neue", sans-serif !important;
+	font-weight: lighter !important;
+	color: #FFF !important;
+	/*color: #00ffec !important;*/
+}
+.stat-std-basic {
+	/*font-weight: normal !important;*/
+	font-family: "ProximaNova","Helvetica Neue", sans-serif !important;
+	font-weight: lighter !important;
+	color: #FFF !important;
+}
+.stat-var-basic {
+	font-family: "ProximaNova","Helvetica Neue", sans-serif !important;
+	font-weight: lighter !important;
+	color: #FFF !important;
+}
+
+.stat-prop-name-basic {
+	font-weight: bold !important;
+}
+
+.macro-stats-view, .macro-stats-view-selected {
+	position: relative;
+	top: 25px;
+	left: -10px;
+	right: 0;
+	height: 0;
+	padding-top: 0px;
+	margin-top: 0px;
+	padding: 0px;
+
+	/*float: auto;*/
+	float: left;
+	margin-left: 15px;
+	overflow: hidden;
+	width: auto;
+	min-width: auto;
+	height: auto;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.9);
+	color: #fff;
+	z-index: 99 !important;
+}
+
+.macro-stats-view1, .macro-stats-view-selected1 {
+	position: relative;
+	top: 25px;
+	left: 200px;
+	right: 0;
+	height: 0;
+	padding-top: 0px;
+	margin-top: 0px;
+	padding: 0px;
+
+	/*float: auto;*/
+	float: left;
+	margin-left: 15px;
+	overflow: hidden;
+	width: auto;
+	min-width: auto;
+	height: auto;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.9);
+	color: #fff;
+	z-index: 99 !important;
+}
+
+
+.macro-stats-view:hover, .macro-stats-view-selected:hover {
+  background: rgba(0, 0, 0, 1.0);
+	opacity: 1.0;
+}
+
+.macro-stats-view-selected {
+  background: rgba(51, 0, 0, 0.9);
+}
+
+ul.macro-stats-list {
+  padding: 0px;
+  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+  shape-rendering: geometricPrecision !important;
+  font-smoothing: always;
+  font-smooth: always;
+  font-family: "Open Sans", "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif !important;
+  text-rendering: geometricPrecision !important;
+  color: #fff;
+  display: inline;
+  list-style-type: none;
+  margin-left: 4px;
+  margin-right: 4px;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.macro-stats-list:hover {
+  background: rgba(0, 0, 0, 1.0);
+}
+
+.macro-stats-list > li {
+  line-height: 135%;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  text-rendering: optimizeLegibility !important; 
+  /*letter-spacing:1.04px; */
+  font-weight: 560;
+  font-family: "Open Sans","Lato","ProximaNova","Lato","Helvetica Neue", sans-serif !important;
+  letter-spacing: 0.04em;
+  shape-rendering: geometricPrecision !important;
+  /*font-size: 11px;*/
+  color: #fff;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-weight: lighter;
+   /*!important;*/
+}
+
+.macro-stats-list > li:hover {
+	background-color: #555;
+	/*color: #000;*/
+}
+
+#macroStatsViewSelected li span {
+  /*color: #00FFFF;*/
+  color: #FFF;
+}
+.macro-stats-list > li span {
+  float: right !important;
+  /*padding-right: 10px;*/
+  
+  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+  shape-rendering: geometricPrecision !important;
+  font-smoothing: always;
+  font-smooth: always;
+  /*font-family: "Open Sans", */
+  font-family: "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif !important;
+  
+  text-rendering: geometricPrecision !important;
+  /*font-weight: bolder;*/
+  /*color: #A9FF00;*/
+}
+
+
+/*                   option bar tool              */
+.dg li.title {
+	text-rendering: geometricPrecision;
+	font-smoothing: always;
+	font-variant: small-caps;
+	font-size: 1.2em;
+	padding-left: 16px;
+	background: black;
+	background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+	cursor: pointer;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+	color: #fff;
+  }
+
+.dg .closed li.title {
+  background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==);
+}
+
+.dg {
+  font: 11px 'Lucida Grande',  "Open Sans", "ProximaNovaBold","ProximaNova","Helvetica Neue", sans-serif !important;
+}
+
+.dg.ac {
+	position: fixed;
+	top: 0px !important; 
+	left: 0;
+	right: 0;
+	height: 0;
+	z-index: 0;
+}
+.list-group-item-sidemenu > a {
+  color: #000;
+}
+.list-group-item-sidemenu:hover > a,
+.list-group-item-sidemenu:hover,
+.list-group-item-sidemenu:focus,
+.list-group-item-sidemenu > a:hover,
+li.list-group-item-sidemenu > a:hover {
+	color: #fff;
+	background: #3e7e9e !important;
+}
+a:hover,a:focus {
+	text-decoration:none;
+}
+li.folder li.folder {
+  margin-left: 8px;
+}
+.dg .closed li.title {
+  background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==);
+}
+.dg li.title {
+	text-rendering: geometricPrecision;
+	font-smoothing: always;
+	font-variant: small-caps;
+	font-size: 1.2em;
+	padding-left: 16px;
+	background: black;
+	background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+	cursor: pointer;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+	color: #fff;
+  }
+
+.graphvis-sidemenu li:hover>a,nav.graphvis-sidemenu li.active>a,.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus,.no-touch .dashboard-page nav.dashboard-menu ul li:hover a,.dashboard-page nav.dashboard-menu ul li.active a {
+	color:#fff;
+	background-color:#5fa2db;
+}
+
+/*                             def menu css          */
+.dg {
+  /** Clear list styles */
+  /* Auto-place container */
+  /* Auto-placed GUI's */
+  /* Line items that don't contain folders. */
+  /** Folder names */
+  /** Hides closed items */
+  /** Controller row */
+  /** Name-half (left) */
+  /** Controller-half (right) */
+  /** Controller placement */
+  /** Shorter number boxes when slider is present. */
+  /** Ensure the entire boolean and function row shows a hand */ 
+
+  z-index: 99999 !important;
+}
+
+
+
+
+  .dg ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	clear: both; }
+  .dg.ac {
+	position: fixed;
+	top: 55px;
+	left: 0;
+	right: 0;
+	height: 0;
+	z-index: 0; 
+  }
+  .dg:not(.ac) .main {
+	/** Exclude mains in ac so that we don't hide close button */
+	overflow: hidden; }
+  .dg.main {
+	-webkit-transition: opacity 0.1s linear;
+	-o-transition: opacity 0.1s linear;
+	-moz-transition: opacity 0.1s linear;
+	transition: opacity 0.1s linear; }
+	.dg.main.taller-than-window {
+	  overflow-y: auto; }
+	  .dg.main.taller-than-window .close-button {
+		opacity: 1;
+		/* TODO, these are style notes */
+		margin-top: -1px;
+		border-top: 1px solid #2c2c2c; }
+	.dg.main ul.closed .close-button {
+	  opacity: 1 !important; }
+	.dg.main:hover .close-button,
+	.dg.main .close-button.drag {
+	  opacity: 1; }
+	.dg.main .close-button {
+	  /*opacity: 0;*/
+	  -webkit-transition: opacity 0.1s linear;
+	  -o-transition: opacity 0.1s linear;
+	  -moz-transition: opacity 0.1s linear;
+	  transition: opacity 0.1s linear;
+	  border: 0;
+	  position: absolute;
+	  line-height: 19px;
+	  height: 20px;
+	  /* TODO, these are style notes */
+	  cursor: pointer;
+	  text-align: center;
+	  background-color: #000; }
+	  .dg.main .close-button:hover {
+		background-color: #111; }
+  .dg.a {
+	float: right;
+	margin-right: 15px;
+	overflow-x: hidden; }
+	.dg.a.has-save > ul {
+	  margin-top: 27px; }
+	  .dg.a.has-save > ul.closed {
+		margin-top: 0; }
+	.dg.a .save-row {
+	  position: fixed;
+	  top: 0;
+	  z-index: 1002; }
+  .dg li {
+	-webkit-transition: height 0.1s ease-out;
+	-o-transition: height 0.1s ease-out;
+	-moz-transition: height 0.1s ease-out;
+	transition: height 0.1s ease-out; }
+  .dg li:not(.folder) {
+	cursor: auto;
+	height: 27px;
+	line-height: 27px;
+	overflow: hidden;
+	padding: 0 4px 0 5px; }
+  .dg li.folder {
+	padding: 0;
+	border-left: 4px solid rgba(0, 0, 0, 0); 
+	width: 100%;
+  }
+  .dg li.title {
+	cursor: pointer;
+	margin-left: -4px; 
+/*width: 100%;*/
+  }
+  .dg .closed li:not(.title),
+  .dg .closed ul li,
+  .dg .closed ul li > * {
+	height: 0;
+	overflow: hidden;
+	border: 0; 
+  }
+  .dg .cr {
+	clear: both;
+	padding-left: 3px;
+	height: 27px; }
+  .dg .property-name {
+	cursor: default;
+	float: left;
+	clear: left;
+	width: 40%;
+	overflow: hidden;
+	text-overflow: ellipsis; }
+  .dg .c {
+	float: left;
+	width: 60%; }
+  .dg .c input[type=text] {
+	border: 0;
+	margin-top: 4px;
+	padding: 3px;
+	width: 100%;
+	float: right; }
+  .dg .has-slider input[type=text] {
+	width: 30%;
+	/*display: none;*/
+	margin-left: 0; }
+  .dg .slider {
+	float: left;
+	width: 66%;
+	margin-left: -5px;
+	margin-right: 0;
+	height: 19px;
+	margin-top: 4px; 
+  }
+
+
+  .dg .slider-fg {
+	height: 100%; }
+  .dg .c input[type=checkbox] {
+	margin-top: 9px; }
+  .dg .c select {
+	margin-top: 5px; }
+  .dg .cr.function,
+  .dg .cr.function .property-name,
+  .dg .cr.function *,
+  .dg .cr.boolean,
+  .dg .cr.boolean * {
+	cursor: pointer; }
+  .dg .selector {
+display: none;
+	/*display: inline-block;*/
+	position: absolute;
+	margin-left: -9px;
+	margin-top: 23px;
+	z-index: 10; 
+  }
+  .dg .c:hover .selector,
+  .dg .selector.drag {
+	/*display: block; */
+	display: inline-block;
+	/*display: table-cell;*/
+	/*width: 300px;*/
+  }
+  .dg li.save-row {
+	padding: 0; }
+	.dg li.save-row .button {
+	  display: inline-block;
+	  padding: 0px 6px; }
+  .dg.dialogue {
+	background-color: #222;
+	width: 460px;
+	padding: 15px;
+	font-size: 13px;
+	line-height: 15px; }
+
+/* TODO Separate style and structure */
+#dg-new-constructor {
+  padding: 10px;
+  color: #222;
+  font-family: Monaco, monospace;
+  font-size: 10px;
+  border: 0;
+  resize: none;
+  box-shadow: inset 1px 1px 1px #888;
+  word-wrap: break-word;
+  margin: 12px 0;
+  display: block;
+  width: 440px;
+  overflow-y: scroll;
+  height: 100px;
+  position: relative; }
+
+#dg-local-explain {
+  display: none;
+  font-size: 11px;
+  line-height: 17px;
+  border-radius: 3px;
+  background-color: #333;
+  padding: 8px;
+  margin-top: 10px; }
+  #dg-local-explain code {
+	font-size: 10px; }
+
+#dat-gui-save-locally {
+  display: none; }
+
+/** Main type */
+.dg {
+  color: #eee;
+  font: 11px 'Lucida Grande', sans-serif;
+  text-shadow: 0 -1px 0 #111;
+  /** Auto place */
+  /* Controller row, <li> */
+  /** Controllers */ }
+  .dg.main {
+	/** Scrollbar */ }
+	.dg.main::-webkit-scrollbar {
+	  width: 5px;
+	  background: #1a1a1a; 
+display: inline-block;
+	}
+	.dg.main::-webkit-scrollbar-corner {
+	  height: 0;
+	  display: none; 
+	  /*display: inline-block;*/
+	}
+
+	.dg.main::-webkit-scrollbar-thumb {
+	  border-radius: 5px;
+	  background: #676767;
+	  display: inline-block;
+	}
+
+  .dg li:not(.folder) {
+	background: #1a1a1a;
+	border-bottom: 1px solid #2c2c2c; 
+	color: #fff;
+	/*font-weight: bold;*/
+  }
+  .dg li.save-row {
+	line-height: 25px;
+	background: #dad5cb;
+	border: 0; 
+  }
+
+	.dg li.save-row select {
+	  margin-left: 5px;
+	  width: 108px; 
+	  /*display: inline-block;*/
+
+	}
+
+	.dg li.save-row .button {
+	  margin-left: 5px;
+	  margin-top: 1px;
+	  border-radius: 2px;
+	  font-size: 9px;
+	  line-height: 7px;
+	  padding: 4px 4px 5px 4px;
+	  background: #c5bdad;
+	  color: #fff;
+	  text-shadow: 0 1px 0 #b0a58f;
+	  box-shadow: 0 -1px 0 #b0a58f;
+	  cursor: pointer; 
+	}
+	  .dg li.save-row .button.gears {
+		background: #c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;
+		height: 7px;
+		width: 8px; 
+	  }
+
+	  .dg li.save-row .button:hover {
+		background-color: #bab19e;
+		box-shadow: 0 -1px 0 #b0a58f; 
+	  }
+
+  .dg li.folder {
+	border-bottom: 0; 
+  }
+
+  .dg li.title {
+	padding-left: 16px;
+	background: black url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+	cursor: pointer;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+	color: #fff;
+	font-weight: bold;
+  }
+  .dg .closed li.title {
+	background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==); }
+
+  .dg .cr.boolean {
+	border-left: 3px solid #806787; 
+  }
+
+  .dg .cr.function {
+	border-left: 3px solid #e61d5f; 
+  }
+
+  .dg .cr.number {
+	border-left: 3px solid #2fa1d6; 
+  }
+
+	.dg .cr.number input[type=text] {
+	  color: #2fa1d6; 
+	}
+  .dg .cr.string {
+	border-left: 3px solid #1ed36f; 
+  }
+	.dg .cr.string input[type=text] {
+	  color: #1ed36f; 
+			text-align: center;
+		  vertical-align: middle;
+	}
+  .dg .cr.function:hover, .dg .cr.boolean:hover {
+	background: #111; 
+  }
+  .dg .c input[type=text] {
+	background: #303030;
+	outline: none; 
+	  text-align: center;
+		  vertical-align: middle;
+	padding:0px;
+	margin:0px;
+	  /*padding-bottom: 12px;*/
+		  display: inline-block;
+  }
+	.dg .c input[type=text]:hover {
+	  background: #3c3c3c; 
+			text-align: center;
+		  vertical-align: middle;
+	padding:0px;
+	margin:0px;
+	  padding-bottom: 12px;
+		  display: inline-block;
+	}
+
+	.dg .c input[type=text]:focus {
+	  background: #494949;
+	  color: #fff;
+			text-align: center;
+		  vertical-align: middle;
+	padding:0px;
+	margin:0px;
+	  padding-bottom: 12px; 
+	}
+
+
+  .dg .c .slider {
+	background: #303030;
+	cursor: ew-resize; 
+
+	display: inline-block;
+	 /*display: table-cell;*/
+  }
+
+  .dg .c .slider-fg {
+	background: #2fa1d6; 
+/*        vertical-align: middle;
+	padding:0px;
+	margin:0px;*/
+	 display: inline-block;
+	  /*display: table-cell;*/
+
+  }
+  .dg .c .slider:hover {
+	background: #3c3c3c;
+	 display: inline-block; 
+	  /*display: table-cell;*/
+  }
+	
+	.dg .c .slider:hover .slider-fg {
+	  background: #44abda; 
+	   display: inline-block;
+		/*display: table-cell;*/
+	}
+/*  end of menu def */
+.saturation-field {
+  margin-right: 0px !important;
+}
+
+	</style>
+</head>
+
+<body>
+	<div id="top-bar" style="margin-top: 5%;">
+		<div id="top1"><img id="page-icon" src="{{ url_for('static', filename='img/network.png') }}" alt="network icon">
+		</div>
+		<div id="top2">
+			<h1 id="titre">Link Prediction demo</h1>
+		</div>
+		<div class="topnav" id="top3">
+			<a class="active" href="#">Home</a>
+			<a href="#guide">Guide</a>
+			<a href="#contact">Contact</a>
+			<a href="{{url_for('login')}}">Login</a>
+			
+		</div>
+	</div>
+
+	<div class="row make-space">
+		<div class="div-left">
+			<label for="dataset">Choose a dataset</label>
+			<select name="" id="graphselect">
+				<option value="g1" selected>dataset1</option>
+				<option value="g2">dataset2</option>
+				<option value="g3">dataset3</option>
+			</select>
+		</div>
+		<div class="div-right">
+			<label for="dataset">Link Prediction method</label>
+			<select name="" id="methodselect">
+				<option value="m1" selected>Adamic adar</option>
+				<option value="m2">SimRank</option>
+				<option value="m3">GCN</option>
+			</select>
+		</div>
+	</div>
+
+
+	<!--<div id="prmtr make-space">
+		<button class="accordion">
+			<img id="tools-icon" src="{{ url_for('static', filename='img/tools.svg') }}" alt="toolsbox">
+			<span style="padding-left: 5px; font-weight:bold; font-size: 1.5em;">Parameters</span>
+		</button>
+		<div class="panel">
+			<label for="Time_sime">set the time simulation </label>
+			<input id="Time_sime" type="Test_s" name="Time_sime" value="0.00" />
+		</div>
+	</div>-->
+
+	<!--<div class="command ">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggles2"
+			viewBox="0 0 16 16">
+			<path d="M9.465 10H12a2 2 0 1 1 0 4H9.465c.34-.588.535-1.271.535-2 0-.729-.195-1.412-.535-2z" />
+			<path
+				d="M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm.535-10a3.975 3.975 0 0 1-.409-1H4a1 1 0 0 1 0-2h2.126c.091-.355.23-.69.41-1H4a2 2 0 1 0 0 4h2.535z" />
+			<path d="M14 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+		</svg><span style="padding-left: 5px; font-weight:bold; font-size: 1.5em;">Command Simulation</span> </br>
+		<p></p>
+		<div style="margin: 5px;">
+			<button class="btn btn-primary" id="select_btn" type="submit" onclick="load_graph()">Submit Graph and Method
+				selection</button>
+		</div>
+		<div style="margin: 5px; display:-ms-inline-grid;">
+			<div class=""></div>
+			<button class="btn btn-success " id="start_btn" onclick="run_linkPrediction()" disabled>
+				<span>Start</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-collection-play-fill" viewBox="0 0 16 16">
+					<path
+						d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm6.258-6.437a.5.5 0 0 1 .507.013l4 2.5a.5.5 0 0 1 0 .848l-4 2.5A.5.5 0 0 1 6 12V7a.5.5 0 0 1 .258-.437z" />
+				</svg>
+			</button>
+			<button class="btn btn-success " id="continue_btn" onclick="continue_click()" disabled>
+				<span>Next</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-skip-forward-circle" viewBox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+					<path
+						d="M4.271 5.055a.5.5 0 0 1 .52.038L7.5 7.028V5.5a.5.5 0 0 1 .79-.407L11 7.028V5.5a.5.5 0 0 1 1 0v5a.5.5 0 0 1-1 0V8.972l-2.71 1.935a.5.5 0 0 1-.79-.407V8.972l-2.71 1.935A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .271-.445z" />
+				</svg>
+			</button>
+			<button class="btn btn-outline-danger " id="pause_btn" disabled>
+				<span>Pause</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-pause-fill" viewBox="0 0 16 16">
+					<path
+						d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z" />
+				</svg>
+			</button>
+			<button type="reset" class="btn btn-dark " id="reset_btn" onclick="reset()">
+				<span>Reset</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+					<path
+						d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+					<path fill-rule="evenodd"
+						d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
+				</svg>
+			</button>
+			<button class="btn btn-success " id="run-once" type="submit" style="float: right;" disabled
+				onclick="run_once()">Run Simulation</button>
+			<p style="margin: 4px;font-size: 150%;"> Instant : <span id="t-value">0</span></p>
+
+		</div>
+	</div>-->
+
+	<p style="margin: 4px;font-size: 150%;"> Instant : <span id="t-value">0</span></p>
+
+	<div style="margin: 5px;">
+	<label for="filen">Load graph:</label>
+	<input type="file" id="filen" name="filen">
+	<button class="btn btn-primary" id="load_file" type="submit" onclick="transform()">load graph</button>
+
+	</div>
+	<div style="margin: 5px;">
+		
+
+
+			<button class="btn btn-primary" id="add_node_btn" type="submit" onclick="visualiser('add_node_form')">add node</button>
+			<div id="add_node_form" style="display:none;">
+			<label for="noeud" type="hidden">ID_Noeud</label>
+			<input name='noeud' id="noeud" type="text" />
+
+			<label for="node_name" type="hidden">Nom</label>
+			<input name='node_name' id="node_name" type="text" />
+
+			<label for="node_last_name" type="hidden">Prenom</label>
+			<input name='node_last_name' id="node_last_name" type="text" />
+
+			<label for="node_birthday" type="hidden">Date de naissance</label>
+			<input name='node_birthday' id="node_birthday" type="text" />
+
+			<button class="btn btn-primary" id="add_node_btn" type="submit" onclick="add_node()">submit</button></div>
+
+		</div>
+		<div style="margin: 5px;">
+			<button class="btn btn-primary" id="add_edge_btn" type="submit" onclick="visualiser('add_link_form')">add edge</button>
+			<div id="add_link_form" style="display:none;">
+			<label for="noeud1" type="hidden">ID_Noeud1</label>
+			<input name='noeud1' id="noeud1" type="text" />
+
+			<label for="noeud2" type="hidden">ID_Noeud2</label>
+			<input name='noeud2' id="noeud2" type="text" />
+			<button class="btn btn-primary" id="add_link_btn" type="submit" onclick="add_link()">submit</button></div>
+		</div>
+
+		<button class="btn btn-primary" id="btn_change_color" type="submit" onclick="change_color()">change color</button>
+
+	<div class="container make-space ">
+		<div id="macroStatsView" class="macro-stats-view">
+	<ul class="macro-stats-list" id="">
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">|V|</li>
+				<li id="num_nodes-count11" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">|E|</li>
+				<li id="num_links-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">density</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max degree</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">avg degree</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">|T|</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">avg triangles</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max triangles</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">local clustrering</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">global clustering</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">assortativity</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max k-core</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max triangle-core</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">chromatic num.</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max indep. set</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">num communities</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">num roles</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">num WL labels</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max betweenness</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">diameter</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">mean distance</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">max pagerank</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">wedges</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">2-star</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">3-1 edge</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">3-indep</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-clique</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-chordal-cycle</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-traled-tri</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-cycle</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">3-star</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-path</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-triangle</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-2star</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-2edge</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-1edge</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+		<li>
+			<ul id="num_nodes" class="stat-list">
+				<li id="num_nodes-name" class="stat-name">4-indep.</li>
+				<li id="num_nodes-count" class="stat stat-count">-</li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+		<div class="visualisation1 " id="draw_here"></div>
+		
+		<div class="visualisation2 " id="new_graph"></div>
+	   
+
+
+
+	   <div class="dg ac">
+		<div class="dg main a taller-than-window" style="width: 245px;">
+			<div style="width: 6px; margin-left: -3px; height: 627px; cursor: ew-resize; position: absolute;"></div>
+			<ul style="height: 627px;">
+				<li class="folder">
+					<div class="dg">
+						<ul class="closed">
+							<li class="title">Interactive Relational Learning</li>
+						</ul>
+					</div>
+					
+				</li>
+				<li class="folder">
+					<div class="dg">
+						<ul id="mydiv1"  class="closed" >
+							<li class="title" onclick="handleBoxed('mydiv1')">Color preferences</li>
+							<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name">background</span>
+									<div>
+									   <input type="color" id="head" name="head"
+											 value="#e66465">
+										 <label for="head"></label>
+									</div>
+									</div></li>
+
+									<li class="cr string color" style="border-left-color: rgb(0, 0, 0);">
+								<div>
+									<span class="property-name"> link color</span>
+									<div class="c"></div>
+								</div>
+							</li>
+
+								</div>
+							</li>
+
+
+
+
+
+							<li class="folder">
+					<div class="dg">
+						<ul id="mydiv2"  class="closed" >
+							<li class="title" onclick="handleBoxed('mydiv2')">Command simulation</li>
+							<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name" onclick="load_graph()">Submit Graph and method selection</span>
+									
+									</div>
+
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name" onclick="run_linkPrediction()">Start</span>
+									
+									</div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name" onclick="continue_click()">Next</span>
+									
+									</div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name">Pause</span>
+									
+									</div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name" onclick="reset()">Reset</span>
+									
+									</div></li>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div>
+									<span class="property-name" onclick="run_once()">Run simulation</span>
+									
+									</div></li>
+
+
+
+									
+
+								</div>
+							</li>
+
+						<ul id="mydivx"  class="closed" >
+							<li class="title" onclick="handleBoxed('mydivx')">Change Graph</li>
+
+						<ul id="mydiv3"  class="closed" >
+							<li class="title" onclick="handleBoxed('mydiv3')">Add node</li>
+							
+								<div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+									<span class="property-name">Node ID</span>
+									<div>
+									   <input type="text" id="node_id" name="node_id">
+										 <label for="node_id"></label>
+									</div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+									<span class="property-name">Node Name</span>
+									<div>
+									   <input type="text" id="node_id2" name="node_id2">
+										 <label for="node_id"></label>
+									</div>
+
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+
+									<span class="property-name">Node Last name</span>
+									<div>
+									   <input type="text" id="node_id" name="node_id">
+										 <label for="node_id"></label>
+									</div>
+									<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+									<span class="property-name">Birthday</span>
+									<div>
+									   <input type="text" id="node_id" name="node_id">
+										 <label for="node_id"></label>
+									</div>
+
+
+
+								</div></li></ul></ul>
+
+						
+
+
+
+
+
+                            <ul id="mydiv5"  class="closed" >
+							<li class="title" onclick="handleBoxed('mydiv5')">Generate graph</li>
+							<li class="cr string color" style="border-left-color: rgb(255, 255, 255);">
+								<div></div></li></ul>
+
+
+								<ul id=""  class="" >
+							<li class="title" onclick="handleBoxed('mydiv6')">Export Graph and Visualisation</li>
+
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export SVG</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export PDF</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+
+
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export SVG with Legend</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export PNG with Legend</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export PNG Image!</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export JPEG Image!</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Save graph</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Load graph</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Export Attrs.</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+
+								</div>
+								<div>
+									<li class="cr function">
+										<div>
+											<span class="property-name">Help</span>
+											<div class="botton"></div>
+										</div>
+									</li>
+									<div class="close-button" style="width: 245px;">Close Controls</div>
+
+								</div>
+
+
+							</ul>
+
+						</ul>
+
+
+
+
+
+
+						
+
+
+					</div>
+					
+				</li>
+			</ul>
+		</div>
+		   
+	   </div>
+	</div>
+	<!--<div id="results">
+		<h1>Results</h1>
+		<h1 id='number_of_nodes'></h1>
+		<h1 id='number_of_links'></h1>
+	</div>
+
+	<section id="counters">
+
+			  <span id="susceptible"><span id="count_S">10</span> Non-infected </span>
+			  <span id="infectious"><span id="count_I">0</span> Spreaders</span>
+			  <span id="recovered"><span id="count_R">0</span> Infected nodes</span>
+			  <span id="SO"><span id="count_SO">0</span> Supporting opinion</span>
+			  <span id="DO"><span id="count_DO">0</span> Denying Opinion opinion</span>
+			</section>-->
+
+
+
+	<script src="{{url_for('static',filename='js/d3.v3.js')}}"></script>
+	<script src="{{url_for('static',filename='js/script.js')}}"></script>
+	<script src="{{url_for('static',filename='js/jQuery.js')}}"></script>
+	<script>
+		var acc = document.getElementsByClassName("accordion");
+		var panel = document.getElementsByClassName("panel");
+
+
+		acc.addEventListener("click", function () {
+			if (panel.style.display === "block") {
+				panel.style.display = "none";
+			} else {
+				panel.style.display = "block";
+			}
+		});
+
+	</script>
+	<script type="text/javascript">
+
+
+
+		var G;
+		var nodeArray;
+		var edgeArray;
+		var newlinkArray;
+		var allnewlinkArray;
+		var nodeColor = "#00f";
+		var linkColor = "#0f0";
+		var newlinkColor = "#f00";
+		var g_name;
+		var m_name;
+		var running = 0;
+		var w = "100%";
+		var h = document.getElementById("draw_here").style.height;
+		var time = 0;
+		var time_interval = 100;
+		var t_final = 100;
+		//*****************************************
+		function update_Sim_time() {
+			p = Number($("#Time_sime").val());
+			if (isNaN(p) || p < 0.0 || p > 2000) {
+				$("#Time_sime").css("background-color", "#f88");
+			} else {
+				time_interval = p;
+				$("#Time_sime").css("background-color", "#fff");
+			}
+		}
+		setInterval(update_Sim_time, time_interval);
+		/**************************************************************/
+		// div for onmouseover   
+		var div = d3.select("body").append("div")
+			.attr("class", "tooltip")
+			.style("opacity", 0);
+		var linkdiv = d3.select("body").append("div")
+			.attr("class", "linkdiv")
+			.style("opacity", 0);
+		/*******************************************************************/
+		var vis;
+		var force;
+		var x;
+		/****/
+		var drag = d3.behavior.drag()
+			.origin(function (d) { return d; })
+			.on("drag", dragged);
+		//**
+		function dragged(event, d) {
+			d3.select(this).attr("cx", d.x = event.clientX).attr("cy", d.y = event.y);
+		}
+		function clicked(event, d) {
+			if (event.defaultPrevented) return; // dragged
+		}
+
+			function load_graph() {
+				$('#select_btn').prop('disabled', true);
+				$('#start_btn').prop('disabled', false);
+
+				g_name = document.getElementById("graphselect").value;
+				//console.log(g_name);
+				$.ajax({
+					dataType: "json",
+					url: "/get_graph",
+					data: g_name,
+					success: function (result, status, xhr) {
+						G = result;
+						draw_graph1();
+						setInterval(update_graph, time_interval);
+						var count_nodes = result['nodes'].length;
+						var count_edges = result['links'].length;
+						console.log(count_nodes);
+						//document.getElementById("number_of_nodes").innerHTML = "number of nodes : "+count_nodes;
+						document.getElementById("num_nodes-count11").innerHTML = ""+count_nodes;
+						
+						//document.getElementById("number_of_links").innerHTML = "number of links : "+count_edges;
+						document.getElementById("num_links-count").innerHTML = ""+count_edges;
+
+
+
+						
+					}
+				});
+			}
+			// 
+			function draw_graph1() {
+				// calculate nodes degres
+				// kArray = []; //nodes deg array 
+				nodeArray = G.nodes; //console.log(nodeArray);
+				edgeArray = G.links; //console.log(edgeArray);
+
+				vis = d3.select("#draw_here")//console.log(vis);
+					.append("svg:svg")
+					.attr("width", w)
+					.attr("height", h)
+					.call(d3.behavior.zoom().on("zoom", function () {
+						vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+					}))
+					.append("g");
+
+				force = d3.layout.force()
+					.charge(-200)
+					.linkStrength(0.5)
+					.friction(0.2)
+					.gravity(0.02)
+					.linkDistance(100)
+					.nodes(nodeArray)
+					.links(edgeArray)
+					.size([300, 300])
+					.start();
+
+
+				force.on("tick", function () {
+					vis.selectAll("line.link")
+						.attr("x1", function (d) { /*console.log(d);*/return d.source.x; })
+						.attr("y1", function (d) { return d.source.y; })
+						.attr("x2", function (d) { return d.target.x; })
+						.attr("y2", function (d) { return d.target.y; })
+						.style("stroke", linkColor);
+
+					vis.selectAll("circle.node")
+						.attr("cx", function (d) { return d.x; })
+						.attr("cy", function (d) { return d.y; })
+						.style("fill", nodeColor)
+						.call(drag)
+						.on("click", clicked);;
+
+				});
+			}
+
+			function erase_graph(){
+				 $('svg'). remove();
+				 /*vis = d3.select("#draw_here")
+
+
+				 vis.removeChild("svg");*/
+				 console.log("erase_graph")
+			}
+
+
+
+
+
+			//  
+			function update_graph() {
+				// draw links
+				x = vis.selectAll("line.link").data(edgeArray, function (d) { return d.source.name + "-" + d.target.name; });
+				//console.log(x);
+				x.enter().insert("svg:line", "circle.node")
+					.attr("class", "link")
+					.attr("x1", function (d) {/*console.log(d);*/ return d.source.x; })
+					.attr("y1", function (d) { return d.source.y; })
+					.attr("x2", function (d) { return d.target.x; })
+					.attr("y2", function (d) { return d.target.y; })
+					.on("mouseover", function (d) {
+						linkdiv.transition()
+							.duration(200)
+							.style("opacity", .9);
+						linkdiv.html("source : " + d.source.name +
+							"<br/>" + "target : " + d.target.name)
+							.style("left", (d3.event.pageX + 50) + "px")
+							.style("top", (d3.event.pageY - 50) + "px");
+					})
+					.on("mouseout", function (d) {
+						linkdiv.transition()
+							.duration(200)
+							.style("opacity", 0);
+					});
+				x.exit().remove();
+				//console.log("update links")
+
+				//draw nodes
+
+				///// nodes' features extraction  /////
+
+
+
+
+				x = vis.selectAll("circle.node").data(nodeArray, function (d) { return d.name; });/*console.log(x);*/
+				x.enter().insert("svg:circle")
+					.attr("class", "node")
+					.attr("cx", function (d) { return d.x; })
+					.attr("cy", function (d) { return d.y; })
+					.attr("r", function (d) { return 4 * Math.sqrt(d.degree); })
+					.style("fill", "#00aa")
+					.call(drag)///9.6
+					.on("click", clicked)
+					.on("mouseover", function (d) {
+						div.transition()
+							.duration(200)
+							.style("opacity", .9);
+
+
+
+					if(d.info_name!=null)
+						info_name=d.info_name;
+					else
+						info_name="null";
+
+					if(d.info_last_name!=null)
+						info_last_name=d.info_last_name;
+					else
+						info_last_name="null";
+					
+					if(d.birthday_date!=null)
+						birthday_date=d.birthday_date;
+					else
+						birthday_date=null;
+
+						div.html("<img src = \"{{ url_for('static', filename='img/profile.ico') }}\"/>" + "<br/>" +
+							"Node Id: " + d.name + "<br/>" + "Node degree: " + d.degree
+							+ "<br/>" + "nom: " + info_name
+							+ "<br/>" + "prénom: " + info_last_name
+							+ "<br/>" + "date de naissance: " + birthday_date)
+							.style("left", (d3.event.pageX + 50) + "px")
+							.style("top", (d3.event.pageY - 50) + "px");
+					})
+					.on("mouseout", function (d) {
+						div.transition()
+							.duration(500)
+							.style("opacity", 0);
+					});
+
+				x.exit().remove();
+				force.start();
+			}
+			//
+			function change_color(){
+				var circleElements =document.getElementsByClassName("node");
+
+				 for (var i = 0; i < circleElements.length; i++) {
+				   circleElements[i].setAttribute("style", " stroke: black;fill: #fff");
+				   circleElements[i].style.fill.value='#fff';
+				   
+				   //$('circle').style.backgroundColor = "red";
+			   }
+			   //document.querySelector(".svgClass").getSVGDocument().getElementById("svgInternalID").setAttribute("fill", "red")
+			}
+
+
+			/////////////////                           add node                     ////////////////////
+			function add_node(){
+				$.ajax({
+					dataType: "text",
+					url: "/add_node",
+					success: function (lines, status, xhr) {
+						/*G = file;
+						G1=file1;
+						console.log('slm');     
+						console.log(G1);
+						G.nodes.push({"name":document.getElementById('noeud').value,"degree":5,"info_name":document.getElementById('node_name').value,"info_last_name":document.getElementById('node_last_name').value,"birthday_date":document.getElementById('node_birthday').value});
+						console.log(G);*/
+						Lines=lines;
+						List_lines=[];
+						List_lines=Lines.split("#");
+
+						//console.log(Lines);
+						newline=document.getElementById('noeud').value+" "+document.getElementById('node_name').value+" "+document.getElementById('node_last_name').value+" "+document.getElementById('node_birthday').value;
+						List_lines.push(newline);
+						for(i=0;i<List_lines.length;i++)
+							List_lines[i]=List_lines[i]+"\n";
+
+
+						Lines=Lines+newline;
+
+						console.log("lines :"+Lines.split("#"));
+						//List_lines.remove('');
+						/*G1.WriteLine(""+document.getElementById('noeud').value+" "+document.getElementById('node_name').value+" "+document.getElementById('node_last_name').value+" "+document.getElementById('node_birthday').value);*/
+					   // G["nodes"].push({"name":999,"degree":0});
+						//load_graph();
+					   // setInterval(update_graph, time_interval);
+					   $.ajax({
+						type : 'POST',
+						contentType: 'application/json;charset=UTF-8',
+						url: "/update_json",
+						data:JSON.stringify({"Lines":List_lines }),
+						dataType:"json",
+						});
+					   erase_graph();
+					   transform();
+
+					   load_graph();
+					   console.log("node added");
+						masquer('add_node_form');
+
+
+
+					}
+				});
+				//$.ajax({load_graph();});
+			}
+
+
+
+			/////////////////////////////////   add links   ///////////////////////////////////////////
+
+			function add_link(){
+				dict={}
+				$.ajax({
+				   dataType: "json",
+					url: "/add_node",
+					success: function (file, status, xhr) {
+						G = file;
+						console.log('slm');     
+						console.log(G);
+						bool1=false;
+						bool2=false;
+						id_node1=document.getElementById('noeud1').value;
+						id_node2=document.getElementById('noeud2').value;
+						for(i1=0;i1<G.nodes.length;i1++){
+							console.log(i1);
+							if(G.nodes[i1].name==id_node1)
+							   { bool1=true;
+								break;}
+
+						}
+						for(i2=0;i2<G.nodes.length;i2++){
+							if(G.nodes[i2].name==id_node2)
+							   { bool2=true;
+
+								break;}
+
+						}
+
+						if(bool1==true && bool2==true){
+							console.log("dakhlet");
+
+
+
+						G.links.push({"source":i1,"target":i2,"instance":0});}
+						console.log(G);
+					   // G["nodes"].push({"name":999,"degree":0});
+						//load_graph();
+					   // setInterval(update_graph, time_interval);
+					   $.ajax({
+						type : 'POST',
+						contentType: 'application/json;charset=UTF-8',
+						url: "/update_json",
+						data:JSON.stringify({"nameF":G}),
+						dataType:"json",
+						});
+					   erase_graph();
+
+					   load_graph();
+					   console.log("link added");
+					   masquer('add_link_form');
+
+
+
+
+				   /* dataType: "json",
+					url: "/add_link",
+					success: function (file, status, xhr) {
+						G = file;
+						console.log('slm');
+						for(i=0;i<G.nodes.length;i++)
+						{
+							dict[G.nodes[i].name]=i;
+							//console.log(G.nodes[i].name);
+						}*/
+						//console.log(dict);
+
+
+
+
+						//G.nodes.push({"source":dict[nom_noeud_source],"target":dict[nom_noeud_target]});
+						//erase_graph();
+					   
+						//load_graph();
+
+					   $.ajax({
+						type : 'POST',
+						contentType: 'application/json;charset=UTF-8',
+						url: "/update_json",
+						data:JSON.stringify({"nameF":G}),
+						dataType:"json",
+						});
+				   
+					}
+				});
+			}
+
+
+
+
+
+
+
+
+			
+
+
+	   /*     $('#load_file').on('click', function() {
+			console.log($('#filen').prop('files'));
+
+			});*/
+
+
+
+
+
+
+			/////////////////////////////////////
+			 function transform() {
+				/*$('#select_btn').prop('disabled', true);
+				$('#start_btn').prop('disabled', false);
+
+				g_name = document.getElementById("graphselect").value;*/
+			   // alert(fake_path.split("\\").pop())
+				data_=document.getElementById('filen').value.split("\\").pop()
+				console.log("name of file =="+document.getElementById('filen').value.split("\\").pop());
+				$.ajax({
+					/*url:"/transform",
+					type:"POST",
+					contentType: 'application/json; charset=utf-8',
+					data:JSON.stringify({"nameOfFile":".... data request test"}),
+					dataType:"json",*/
+
+
+
+
+
+					type : 'POST',
+					contentType: 'application/json;charset=UTF-8',
+					url: "/transform",
+					data:JSON.stringify({"nameOfFile":""+data_}),
+					dataType:"json",
+					success: function () {
+
+					}
+				});
+			}
+
+
+
+
+
+			/*  force2 */
+			/******************************************************************/
+
+			var vis2;
+			var force2;
+			var x2;
+			var G2;
+			var nodeArray2;
+			var edgeArray2;
+			//
+
+			function run_linkPrediction() {
+				$('#start_btn').prop('disabled', true);
+				$('#continue_btn').prop('disabled', false);
+				$('#pause_btn').prop('disabled', false);
+				$('#run-once').prop('disabled', false);
+				$.ajax({
+					dataType: "json",
+					url: "/run_linkPrediction",
+					data: m_name,
+					success: function (result, status, xhr) {
+						time++; //console.log(time);
+						document.getElementById("t-value").innerHTML = time;
+						G2 = result;
+						nodeArray2 = G2.nodes; //console.log(nodeArray2);
+						edgeArray2 = G2.links; //console.log(edgeArray2);
+						draw_graph2();
+						setInterval(update_graph2, time_interval);
+						
+					}
+				});
+			}
+			function draw_graph2() {
+
+				vis2 = d3.select("#new_graph")
+					.append("svg:svg")
+					.attr("width", w)
+					.attr("height", h)
+					.call(d3.behavior.zoom().on("zoom", function () {
+						vis2.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+					}))
+					.append("g");
+
+				force2 = d3.layout.force()
+					.charge(-200)
+					.linkStrength(0.5)
+					.friction(0.2)
+					.gravity(0.02)
+					.linkDistance(100)
+					.nodes(nodeArray2)
+					.links(edgeArray2)
+					.size([300, 300])
+					.start();
+
+
+				force2.on("tick", function () {
+					vis2.selectAll("line.link")
+						.attr("x1", function (d) { return d.source.x; })
+						.attr("y1", function (d) { return d.source.y; })
+						.attr("x2", function (d) { return d.target.x; })
+						.attr("y2", function (d) { return d.target.y; })
+						.style("display", function (d) {//n'afficher pas les liens futurs
+							if (d.instance > time) {
+								//console.log(d.instance);
+								return "none";
+							}
+						})
+						.style("stroke", function (d) {
+							if (d.instance != time) {
+								return linkColor;
+							}
+							else {
+								//console.log(d.instance);
+								//console.log(newlinkColor);
+								//console.log(d);
+								return newlinkColor;
+							}
+						})
+						.style("stroke-width", function (d) {
+							if (d.instance == time) {
+								return "5px";
+							}
+						});
+
+					vis2.selectAll("circle.node")
+						.attr("cx", function (d) { return d.x; })
+						.attr("cy", function (d) { return d.y; })
+						.style("fill", nodeColor)
+					/*.style("opacity","0.5")*/;
+				});
+			}
+			function update_graph2() {
+				// draw links
+				x2 = vis2.selectAll("line.link").data(edgeArray2, function (d) { return d.source.name + "-" + d.target.name; });
+				x2.enter().insert("svg:line", "circle.node")
+					.attr("class", "link")
+					.attr("x1", function (d) {/*console.log(d);*/ return d.source.x; })
+					.attr("y1", function (d) { return d.source.y; })
+					.attr("x2", function (d) { return d.target.x; })
+					.attr("y2", function (d) { return d.target.y; })
+					.on("mouseover", function (d) {
+						linkdiv.transition()
+							.duration(200)
+							.style("opacity", .9);
+						linkdiv.html("source : " + d.source.name +
+							"<br/>" + "target : " + d.target.name)
+							.style("left", (d3.event.pageX + 50) + "px")
+							.style("top", (d3.event.pageY - 50) + "px");
+					})
+					.on("mouseout", function (d) {
+						linkdiv.transition()
+							.duration(200)
+							.style("opacity", 0);
+					})
+					.call(force2.drag);
+				x2.exit().remove();
+				//console.log("update links")
+
+				//draw nodes
+				x2 = vis2.selectAll("circle.node").data(nodeArray2, function (d) { return d.name; });/*console.log(x);*/
+				x2.enter().insert("svg:circle")
+					.attr("class", "node")
+					.attr("cx", function (d) { return d.x; })
+					.attr("cy", function (d) { return d.y; })
+					.attr("r", function (d) { return 4 * Math.sqrt(d.degree); })
+					.style("fill", "#00aa")
+					.call(force2.drag)
+					.on("click", function (d, i) {
+						// x.attr("fill", "#f00")
+					})
+					.on("mouseover", function (d) {
+						div.transition()
+							.duration(200)
+							.style("opacity", .9);
+						
+
+						if(d.info_name!=null)
+						info_name=d.info_name;
+					else
+						info_name="null";
+
+					if(d.info_last_name!=null)
+						info_last_name=d.info_last_name;
+					else
+						info_last_name="null";
+					
+					if(d.birthday_date!=null)
+						birthday_date=d.birthday_date;
+					else
+						birthday_date=null;
+
+						div.html("<img src = \"{{ url_for('static', filename='img/profile.ico') }}\"/>" + "<br/>" +
+							"Node Id: " + d.name + "<br/>" + "Node degree: " + d.degree
+							+ "<br/>" + "nom: " + info_name
+							+ "<br/>" + "prénom: " + info_last_name
+							+ "<br/>" + "date de naissance: " + birthday_date)
+							.style("left", (d3.event.pageX + 50) + "px")
+							.style("top", (d3.event.pageY - 50) + "px");
+
+
+					})
+					.on("mouseout", function (d) {
+						div.transition()
+							.duration(500)
+							.style("opacity", 0);
+					});
+
+				x2.exit().remove();
+				force2.start();
+			}
+
+			function continue_click() {
+				time++;
+				if (time == t_final) {
+					$('#continue_btn').prop('disabled', true);
+				}
+				document.getElementById("t-value").innerHTML = time;
+				console.log(time);
+			}
+
+			function reset() {
+				window.location.reload();
+			}
+			function run_once() {
+				$('#continue_btn').prop('disabled', true);
+				$('#pause_btn').prop('disabled', false);
+				setInterval(function () { 
+					if (time != 100)
+					  time++;
+					document.getElementById("t-value").innerHTML = time;
+				}, 1500);
+			}
+			function visualiser(id){
+				document.getElementById(id).style.display="block";
+			}
+
+			function masquer(id){
+				document.getElementById(id).style.display="none";
+			}
+
+
+
+
+
+			 function handleBoxed(id) {/*
+		jQuery('.folder .dg ul').click(function(){
+			jQuery(this).addClass("active-switcher-btn");
+			jQuery(".wide-layout-btn").removeClass("active-switcher-btn");
+			jQuery("body").addClass("boxed-layout container");
+		});*/
+
+
+if($( "#"+id ).hasClass( "closed" ))
+	{$( "#"+id ).removeClass("closed");}
+else {
+	$( "#"+id ).addClass("closed");
+}
+	}
+	</script>
+
+
+</body>
+
+</html>

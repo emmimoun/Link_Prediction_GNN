@@ -1,0 +1,3068 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Dashboard</title>
+  <style type="text/css">
+    div.tooltip {
+      position: absolute;
+      text-align: center;
+      width: 150px;
+      height: 30;
+      padding: 2px;
+      font: 15px sans-serif;
+      background: lightsteelblue;
+      border: 0px;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+
+    .visualisation1 {
+      /*background-color: #f5f5f5;*/
+      width: 40%;
+      float: left;
+      background-color: #fff;
+      border: 2px solid #29293d;
+      border-radius: 10px;
+      height: 700px;
+
+    }
+
+    .visualisation2 {
+      /*background-color: #f5f5f5;*/
+      width: 40%;
+      float: right;
+      background-color: #fff;
+      /*background-color: #ccc ;*/
+      border: 2px solid #29293d;
+      border-radius: 10px;
+      height: 700px;
+    }
+
+    .node {
+      stroke: #fff;
+    }
+
+    ul.stat-list {
+      list-style-type: none;
+      display: inline-block;
+
+      text-rendering: geometricPrecision !important;
+      -webkit-font-smoothing: antialiased !important;
+      shape-rendering: geometricPrecision !important;
+      font-smoothing: always !important;
+      font-smooth: always !important;
+      /*font-family: "Open Sans", */
+      font-family: "ProximaNovaBold", "ProximaNova", "Helvetica Neue", sans-serif !important;
+
+      text-rendering: geometricPrecision !important;
+      margin: 0px;
+      /*!important;*/
+      padding: 0px;
+      /*!important;*/
+      /*height: inherit;*/
+      height: 12px;
+      top: 0 !important;
+      color: #FFF;
+      font-weight: lighter;
+      line-height: 100% !important;
+      clear: both;
+    }
+
+    ul.stat-list li {
+      display: inline-block;
+      vertical-align: middle !important;
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+      margin: 0px !important;
+      margin-top: -2px !important;
+      min-width: 10px;
+      color: #FFF;
+    }
+
+    ul.stat-list li:last-child {
+      margin-left: 6px !important;
+      clear: both;
+    }
+
+    .stat {
+      text-align: center;
+      color: #FFF;
+      font-weight: normal;
+      width: auto;
+      clear: both;
+    }
+
+    .stat-name {
+      text-align: left !important;
+      width: 105px !important;
+      overflow: hidden !important;
+      color: #FFF;
+      font-style: lighter;
+      -webkit-font-smoothing: subpixel-antialiased !important;
+      text-rendering: optimizeLegibility !important;
+      font-family: "Open Sans", "Lato", "ProximaNova", "Lato", "Helvetica Neue", sans-serif !important;
+      letter-spacing: 0.04em;
+      shape-rendering: geometricPrecision !important;
+    }
+
+    .stat-count {
+      text-align: right !important;
+      border-radius: 0px !important;
+      color: #A9FF00 !important;
+      font-weight: bolder !important;
+      background-color: none !important;
+    }
+
+    .stat-max {
+      font-weight: normal !important;
+      color: #FFF !important;
+      text-align: center !important;
+    }
+
+    .stat-max:hover {
+      color: #FF0000 !important;
+      font-weight: bolder !important;
+    }
+
+
+
+
+    .stat-basic {
+      color: #FFF;
+      font-family: 'Lucida Grande', "Open Sans", "ProximaNovaBold", "ProximaNova", "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: subpixel-antialiased !important;
+      text-rendering: optimizeLegibility !important;
+      letter-spacing: 0.04em;
+      shape-rendering: geometricPrecision !important;
+    }
+
+    .stat-name-basic {
+      font-family: "Open Sans", "ProximaNovaBold", "ProximaNova", "Helvetica Neue", sans-serif !important;
+      -webkit-font-smoothing: subpixel-antialiased !important;
+      text-rendering: optimizeLegibility !important;
+      color: #FFF;
+      font-weight: lighter !important;
+      letter-spacing: 0.04em !important;
+      shape-rendering: geometricPrecision !important;
+    }
+
+    .stat-count-basic {
+      color: #A9FF00 !important;
+      font-weight: bolder !important;
+      letter-spacing: 0.04em !important;
+      font-family: "ProximaNova", "Helvetica Neue", sans-serif !important;
+    }
+
+    .stat-max-basic {
+      font-weight: lighter !important;
+      font-family: "ProximaNova", "Helvetica Neue", sans-serif !important;
+      color: #FFF !important;
+    }
+
+    .stat-mean-basic {
+      font-family: "ProximaNova", "Helvetica Neue", sans-serif !important;
+      font-weight: lighter !important;
+      color: #FFF !important;
+      /*color: #00ffec !important;*/
+    }
+
+    .stat-std-basic {
+      /*font-weight: normal !important;*/
+      font-family: "ProximaNova", "Helvetica Neue", sans-serif !important;
+      font-weight: lighter !important;
+      color: #FFF !important;
+    }
+
+    .stat-var-basic {
+      font-family: "ProximaNova", "Helvetica Neue", sans-serif !important;
+      font-weight: lighter !important;
+      color: #FFF !important;
+    }
+
+    .stat-prop-name-basic {
+      font-weight: bold !important;
+    }
+
+
+
+    .macro-stats-view,
+    .macro-stats-view-selected {
+      position: relative;
+      top: 25px;
+      left: -10px;
+      right: 0;
+      height: 0;
+      padding-top: 0px;
+      margin-top: 0px;
+      padding: 0px;
+
+      /*float: auto;*/
+      float: left;
+      margin-left: 15px;
+      overflow: hidden;
+      width: auto;
+      min-width: auto;
+      height: auto;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+      -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      z-index: 99 !important;
+    }
+
+    .macro-stats-view1,
+    .macro-stats-view-selected1 {
+      position: relative;
+      top: 25px;
+      left: 200px;
+      right: 0;
+      height: 0;
+      padding-top: 0px;
+      margin-top: 0px;
+      padding: 0px;
+
+      /*float: auto;*/
+      float: left;
+      margin-left: 15px;
+      overflow: hidden;
+      width: auto;
+      min-width: auto;
+      height: auto;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+      -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      z-index: 99 !important;
+    }
+
+
+    .macro-stats-view:hover,
+    .macro-stats-view-selected:hover {
+      background: rgba(0, 0, 0, 1.0);
+      opacity: 1.0;
+    }
+
+    .macro-stats-view-selected {
+      background: rgba(51, 0, 0, 0.9);
+    }
+
+    ul.macro-stats-list {
+      padding: 0px;
+      text-rendering: geometricPrecision !important;
+      -webkit-font-smoothing: antialiased !important;
+      shape-rendering: geometricPrecision !important;
+      font-smoothing: always;
+      font-smooth: always;
+      font-family: "Open Sans", "ProximaNovaBold", "ProximaNova", "Helvetica Neue", sans-serif !important;
+      text-rendering: geometricPrecision !important;
+      color: #fff;
+      display: inline;
+      list-style-type: none;
+      margin-left: 4px;
+      margin-right: 4px;
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    .macro-stats-list:hover {
+      background: rgba(0, 0, 0, 1.0);
+    }
+
+    .macro-stats-list>li {
+      line-height: 135%;
+      -webkit-font-smoothing: subpixel-antialiased !important;
+      text-rendering: optimizeLegibility !important;
+      /*letter-spacing:1.04px; */
+      font-weight: 560;
+      font-family: "Open Sans", "Lato", "ProximaNova", "Lato", "Helvetica Neue", sans-serif !important;
+      letter-spacing: 0.04em;
+      shape-rendering: geometricPrecision !important;
+      /*font-size: 11px;*/
+      color: #fff;
+      padding-left: 8px;
+      padding-right: 8px;
+      font-weight: lighter;
+      /*!important;*/
+    }
+
+    .macro-stats-list>li:hover {
+      background-color: #555;
+      /*color: #000;*/
+    }
+
+    #macroStatsViewSelected li span {
+      /*color: #00FFFF;*/
+      color: #FFF;
+    }
+
+    .macro-stats-list>li span {
+      float: right !important;
+      /*padding-right: 10px;*/
+
+      text-rendering: geometricPrecision !important;
+      -webkit-font-smoothing: antialiased !important;
+      shape-rendering: geometricPrecision !important;
+      font-smoothing: always;
+      font-smooth: always;
+      /*font-family: "Open Sans", */
+      font-family: "ProximaNovaBold", "ProximaNova", "Helvetica Neue", sans-serif !important;
+
+      text-rendering: geometricPrecision !important;
+      /*font-weight: bolder;*/
+      /*color: #A9FF00;*/
+    }
+  </style>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link type="text/css" rel="stylesheet"
+    src="{{url_for('static',filename='plugins/fontawesome-free/css/all.min.css')}}">
+
+  <!-- Ionicons -->
+  <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" type="text/css"
+    href="{{url_for('static',filename='plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+
+  <!-- iCheck -->
+  <link rel="stylesheet" type="text/css"
+    href="{{url_for('static',filename='plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+
+  <!-- JQVMap -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='plugins/jqvmap/jqvmap.min.css')}}">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='dist/css/adminlte.min.css')}}">
+
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" type="text/css"
+    href="{{url_for('static',filename='plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+
+  <!-- Daterange picker -->
+  <link rel="stylesheet" type="text/css"
+    href="{{url_for('static',filename='plugins/daterangepicker/daterangepicker.css')}}">
+
+  <!-- summernote -->
+  <link rel="stylesheet" type="text/css"
+    href="{{url_for('static',filename='plugins/summernote/summernote-bs4.min.css')}}">
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+      <img class="animation__shake" src="{{url_for('static',filename='dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo"
+        height="60" width="60">
+    </div>
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="index3.html" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Contact</a>
+        </li>
+      </ul>
+
+      <!-- Right navbar links -->
+      <!--<button onclick="load_graph(); ">Submit</button>
+    <button onclick="run_linkPrediction()">Start</button>
+    <button onclick="continue_click()">Next</button>
+    <button onclick="run_once()">Run simulation</button>
+    <button onclick="reset()">Reset</button>-->
+      <ul class="navbar-nav ml-auto">
+        <!-- Navbar Search -->
+        <button class="btn btn-primary" id="Loginbtn" type="submit" onclick="login()">Login</button>
+        <li class="nav-item">
+          <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+            <i class="fas fa-search"></i>
+          </a>
+          <div class="navbar-search-block">
+            <form class="form-inline">
+              <div class="input-group input-group-sm">
+                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-navbar" type="submit">
+                    <i class="fas fa-search"></i>
+                  </button>
+                  <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </li>
+
+        <!-- Messages Dropdown Menu -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-comments"></i>
+            <span class="badge badge-danger navbar-badge">3</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <a href="#" class="dropdown-item">
+              <!-- Message Start -->
+              <div class="media">
+                <img src="{{url_for('static',filename='dist/img/user1-128x128.jpg')}}" alt="User Avatar"
+                  class="img-size-50 mr-3 img-circle">
+                <div class="media-body">
+                  <h3 class="dropdown-item-title">
+                    Brad Diesel
+                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                  </h3>
+                  <p class="text-sm">Call me whenever you can...</p>
+                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                </div>
+              </div>
+              <!-- Message End -->
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <!-- Message Start -->
+              <div class="media">
+                <img src="{{url_for('static',filename='dist/img/user8-128x128.jpg')}}" alt="User Avatar"
+                  class="img-size-50 img-circle mr-3">
+                <div class="media-body">
+                  <h3 class="dropdown-item-title">
+                    John Pierce
+                    <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                  </h3>
+                  <p class="text-sm">I got your message bro</p>
+                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                </div>
+              </div>
+              <!-- Message End -->
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <!-- Message Start -->
+              <div class="media">
+                <img src="{{url_for('static',filename='dist/img/user3-128x128.jpg')}}" alt="User Avatar"
+                  class="img-size-50 img-circle mr-3">
+                <div class="media-body">
+                  <h3 class="dropdown-item-title">
+                    Nora Silvester
+                    <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                  </h3>
+                  <p class="text-sm">The subject goes here</p>
+                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                </div>
+              </div>
+              <!-- Message End -->
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          </div>
+        </li>
+        <!-- Notifications Dropdown Menu -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-bell"></i>
+            <span class="badge badge-warning navbar-badge">15</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-item dropdown-header">15 Notifications</span>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-envelope mr-2"></i> 4 new messages
+              <span class="float-right text-muted text-sm">3 mins</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-users mr-2"></i> 8 friend requests
+              <span class="float-right text-muted text-sm">12 hours</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-file mr-2"></i> 3 new reports
+              <span class="float-right text-muted text-sm">2 days</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+            <i class="fas fa-th-large"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="index3.html" class="brand-link">
+        <img src="{{url_for('static',filename='dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo"
+          class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">Link Prediction</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) 
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{url_for('static',filename='dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">Alexander Pierce</a>
+        </div>
+      </div>-->
+
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+          <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Dashboard
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <!--<li class="nav-item">
+                <a href="./index.html" class="nav-link active">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Dashboard v1</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index2.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Dashboard v2</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index3.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Dashboard v3</p>
+                </a>
+              </li>-->
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="pages/widgets.html" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Interactive Relational Learning
+                  <span class="right badge badge-danger">New</span>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Command simulation
+                  <i class="fas fa-angle-left right"></i>
+                  <span class="badge badge-info right">6</span>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <button style="width : 180px;" onclick="load_graph()">Submit graph</button>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <button style="width : 180px;" onclick="run_linkPrediction()">Start</button>
+
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <button style="width : 180px;" onclick="continue_click()">Next</button>
+
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <button style="width : 180px;" onclick="run_once()">Run Simulation</button>
+
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <button style="width : 180px;" onclick="reset()">Reset</button>
+                  </a>
+                </li>
+                <!--<li class="nav-item">
+                <a href="pages/layout/fixed-topnav.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Run Simulation</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/layout/fixed-footer.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Fixed Footer</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/layout/collapsed-sidebar.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Collapsed Sidebar</p>
+                </a>
+              </li>-->
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                <p>
+                  Color preference
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <div>
+                    <span class="property-name">Stroke color</span>
+                    <div>
+                      <input type="color" id="stroke_color" name="head" value="#e66465">
+                      <label for="head"></label>
+                      <button type="submit" onclick="change_stroke_color()">submit</button>
+                    </div>
+                  </div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <div>
+                    <span class="property-name">node color</span>
+                    <div>
+                      <input type="color" id="node_color" name="head" value="#e66465">
+                      <label for="head"></label>
+                      <button type="submit" onclick="change_node_color()">submit</button>
+                    </div>
+                  </div>
+
+
+                </li>
+                <li class="nav-item">
+                  <div>
+                    <span class="property-name">Link color</span>
+                    <div>
+                      <input type="color" id="link_color" name="head" value="#e66465">
+                      <label for="head"></label>
+                      <button type="submit" onclick="change_link_color()">submit</button>
+                    </div>
+                  </div>
+
+
+
+                </li>
+                <li class="nav-item">
+
+
+                  <div>
+                    <span class="property-name">background color</span>
+                    <div>
+                      <input type="color" id="background_color" name="head" value="#e66465">
+                      <label for="head"></label>
+                      <button type="submit" onclick="change_background_color()">submit</button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-header">---------- Change Graph ---------</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tree"></i>
+                <p>
+                  Add Node
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/UI/general.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>ID Node</p>
+                    <input type="text" id="f_node_id"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);"
+                      name="node_id">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/UI/icons.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>First Name</p>
+                    <input type="text" id="f_node_name" name="f_node_name"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/UI/buttons.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Last Name</p>
+                    <input type="text" id="f_node_last_name" name="f_node_last_name"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/UI/sliders.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Birthday</p>
+                    <input type="text" id="f_node_birth" name="f_node_birth"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <button type="submit" style="right:10px;width : 80px;" onclick="add_node()">Add</button>
+
+              </ul>
+            </li>
+
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tree"></i>
+                <p>
+                  Add Edge
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/UI/general.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Source</p>
+                    <input type="text" id="f_source_id"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);"
+                      name="f_source_id">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/UI/icons.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Target</p>
+                    <input type="text" id="f_target_id" name="f_target_id"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <button type="submit" style="width : 80px;" onclick="">Add</button>
+
+              </ul>
+            </li>
+
+
+
+
+
+
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tree"></i>
+                <p>
+                  Remove Node
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/UI/general.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>ID Node</p>
+                    <input type="text" id="delete_node_id" name="delete_node_id"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <button type="submit" style="width : 80px;" onclick="">Delete</button>
+
+              </ul>
+            </li>
+
+
+
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tree"></i>
+                <p>
+                  Remove Edge
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/UI/general.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Source</p>
+                    <input type="text" id="delete_edge_source" name="delete_edge_source"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/UI/icons.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Target</p>
+                    <input type="text" id="delete_edge_target" name="delete_edge_target"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                  </a>
+                </li>
+                <button type="submit" style="width : 80px;" onclick="">Delete</button>
+
+              </ul>
+            </li>
+
+
+
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-edit"></i>
+                <p>
+                  -------- Generate Graph ---------
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Node Number</p>
+                    <input type="text" id="node_numbre_gen"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);"
+                      name="node_numbre_gen">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Edge Number</p>
+                    <input type="text" id="edge_numbre_gen"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);"
+                      name="edge_numbre_gen">
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Method</p>
+                    <select name="" id="methode_gen"
+                      style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);">
+                      <option value="powerlaw_cluster_graph" selected>powerlaw cluster</option>
+                      <option value="dual_barabasi_albert_graph">dual barabasi</option>
+                    </select>
+                  </a>
+                </li>
+
+                <button style="width : 180px;" onclick="generate_graph()">Generate</button>
+
+
+
+
+
+
+
+
+
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>
+                  Tables
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/tables/simple.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Simple Tables</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/tables/data.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>DataTables</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/tables/jsgrid.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>jsGrid</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-header">Export Graph and Visualisation</li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <i class="nav-icon far fa-calendar-alt"></i>
+                <p>
+                  <button style="width:180px" class="property-name" onclick="save_img_file_svg()">Export SVG</button>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <i class="nav-icon far fa-image"></i>
+                <p>
+                  <button style="width:180px" class="property-name" onclick="save_img_file_pdf()">Export PDF</button>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <i class="nav-icon fas fa-columns"></i>
+                <p>
+                  <button style="width:180px" class="property-name" onclick="save_img_file_png()">Export PNG</button>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <i class="nav-icon far fa-envelope"></i>
+                <p>
+                  <button style="width:180px" class="property-name" onclick="save_img_file_jpeg()">Export JPEG</button>
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="pages/mailbox/mailbox.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Save Graph</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <button style="width:180px" class="property-name" onclick="transform()">Load Graph</button>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="pages/mailbox/read-mail.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Eport Attrs.</p>
+              </a>
+            </li>
+            <!--<li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Pages
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="pages/examples/invoice.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Invoice</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/profile.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Profile</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/e-commerce.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>E-commerce</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/projects.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Projects</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/project-add.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Project Add</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/project-edit.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Project Edit</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/project-detail.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Project Detail</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/contacts.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Contacts</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/faq.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>FAQ</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/contact-us.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Contact us</p>
+                </a>
+              </li>
+            </ul>
+          </li>-->
+            <!--<li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <p>
+                Extras
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Login & Register v1
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="pages/examples/login.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Login v1</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/register.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Register v1</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/forgot-password.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Forgot Password v1</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/recover-password.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Recover Password v1</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Login & Register v2
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="pages/examples/login-v2.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Login v2</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/register-v2.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Register v2</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/forgot-password-v2.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Forgot Password v2</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="pages/examples/recover-password-v2.html" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Recover Password v2</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/lockscreen.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lockscreen</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/legacy-user-menu.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Legacy User Menu</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/language-menu.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Language Menu</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/404.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Error 404</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/500.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Error 500</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/pace.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pace</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/examples/blank.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Blank Page</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="starter.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Starter Page</p>
+                </a>
+              </li>
+            </ul>
+          </li>-->
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-search"></i>
+                <p>
+                  Search
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="pages/search/simple.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Simple Search</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/search/enhanced.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Enhanced</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-header">MISCELLANEOUS</li>
+            <li class="nav-item">
+              <a href="iframe.html" class="nav-link">
+                <i class="nav-icon fas fa-ellipsis-h"></i>
+                <p>Tabbed IFrame Plugin</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="https://adminlte.io/docs/3.1/" class="nav-link">
+                <i class="nav-icon fas fa-file"></i>
+                <p>Documentation</p>
+              </a>
+            </li>
+            <li class="nav-header">MULTI LEVEL EXAMPLE</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-circle nav-icon"></i>
+                <p>Level 1</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                  Level 1
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Level 2</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                      Level 2
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>Level 3</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>Level 3</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>Level 3</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Level 2</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-circle nav-icon"></i>
+                <p>Level 1</p>
+              </a>
+            </li>
+            <li class="nav-header">LABELS</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-danger"></i>
+                <p class="text">Important</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-warning"></i>
+                <p>Warning</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-info"></i>
+                <p>Informational</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+
+    <div id="content-prediction-last" class="content-wrapper">
+      <div class="card card-default">
+        <div class="card-header">
+          <h3 class="card-title">Select2 (Default Theme)</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Minimal</label>
+                <select id="graphselect" class="form-control select2" style="width: 100%;">
+                  <option selected>choose graph</option>
+                  <!--<option value="g1" selected>Facebook SNAP</option>
+                    <option value="g2">Twitter SNAP</option>
+                    <option value="g3">FB-FORUM</option>-->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Minimal</label>
+                <select id="methodselect" class="form-control select2" style="width: 100%;">
+                  <option value="m1" selected>GCN</option>
+                  <option value="m2">GAE</option>
+                  <option value="m3">TDGNN</option>
+                  <option value="m4">VGRNN</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="submit_choice()">Submit</button>
+
+              <!-- /.form-group -->
+
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+
+
+          <!-- /.row -->
+        </div>
+
+        <div style="display: none;">
+          <label for="filen">Load graph:</label>
+          <input type="file" id="filen" name="filen">
+          <button class="btn btn-primary" id="load_file" type="submit" onclick="transform()">load graph</button>
+        </div>
+        <!-- /.card-body -->
+
+      </div>
+    </div>
+
+
+    <div id="content-prediction" class="content-wrapper" style="display: none;">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Dashboard</h1>
+              <button class="btn btn-primary" onclick="change_method()">Change method of link prediction</button>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard v1</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3><span id="t-value">0</span></h3>
+
+                  <p>Instant</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-bag"></i>
+                </div>
+                <!--<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>-->
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3><span id="t-value">0</span><sup style="font-size: 20px">%</sup></h3>
+
+                  <p>Accuracy</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3><span id="edge-number-value">0</span></h3>
+
+                  <p>Number of added link</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                </div>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>23</h3>
+
+                  <p>Number of simulations</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                </div>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="visualisation1 " id="draw_here"></div>
+
+            <div class="visualisation2 " id="new_graph"></div>
+
+            <div id="macroStatsView" class="macro-stats-view">
+              <ul class="macro-stats-list" id="">
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">|V|</li>
+                    <li id="num_nodes-count11" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">|E|</li>
+                    <li id="num_links-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">density</li>
+                    <li id="density-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max degree</li>
+                    <li id="max_degree-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">avg degree</li>
+                    <li id="avg_degree-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">|T|</li>
+                    <li id="triangles-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">avg triangles</li>
+                    <li id="avg_triangles-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max triangles</li>
+                    <li id="max_triangles-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">local clustrering</li>
+                    <li id="local_clustering-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">global clustering</li>
+                    <li id="global_clustering-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">assortativity</li>
+                    <li id="assortativity-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max k-core</li>
+                    <li id="kcore-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max triangle-core</li>
+                    <li id="max_triangle_core-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">chromatic num.</li>
+                    <li id="chromatic_num-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max indep. set</li>
+                    <li id="max_indepset-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">num communities</li>
+                    <li id="number_of_communities-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">num roles</li>
+                    <li id="num_roles-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">num WL labels</li>
+                    <li id="num_wl_labels-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max betweenness</li>
+                    <li id="max_betweenness-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">diameter</li>
+                    <li id="diameter-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">mean distance</li>
+                    <li id="mean_distance-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">max pagerank</li>
+                    <li id="max_pagerank-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">wedges</li>
+                    <li id="wedges-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">2-star</li>
+                    <li id="2star-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">3-1 edge</li>
+                    <li id="3-1edge-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">3-indep</li>
+                    <li id="3-indep-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-clique</li>
+                    <li id="4-clique-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-chordal-cycle</li>
+                    <li id="4-chordal-cycle-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-traled-tri</li>
+                    <li id="4-traled-tri-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-cycle</li>
+                    <li id="4-cycle-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">3-star</li>
+                    <li id="3-star-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-path</li>
+                    <li id="4-path-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-triangle</li>
+                    <li id="4-triangle-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-2star</li>
+                    <li id="4-2star-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-2edge</li>
+                    <li id="4-2edge-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-1edge</li>
+                    <li id="4-1edge-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+                <li>
+                  <ul id="num_nodes" class="stat-list">
+                    <li id="num_nodes-name" class="stat-name">4-indep.</li>
+                    <li id="4-indep-count" class="stat stat-count">-</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <h1>Graph layout</h1>
+          <div class="row">
+
+
+
+            <section id="graphs">
+
+              <div id="graph-layout">
+                <div id="graph-control">
+
+                </div>
+              </div>
+              <section>
+                <div id="graph-layout_opinion">
+
+                  <div id="Nodes_degree_distribution"></div>
+                  <div style="width: 500px; height: 400px;" id="epicurves"></div>
+                  <div id="Infcurves2"></div>
+                </div>
+
+              </section>
+            </section>
+
+
+
+          </div>
+          <!-- /.row -->
+
+          <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+
+    <!-- login-wrapper begin -->
+    <div id="content-login" class="content-wrapper" style="display: none;">
+      <div class="login-box">
+        <div class="login-logo">
+          <a href="../../index2.html"><b>Admin</b>LTE</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+          <div class="card-body login-card-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+
+            <form action="../../index3.html" method="post">
+              <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="Email">
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="Password">
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <div class="icheck-primary">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">
+                      Remember Me
+                    </label>
+                  </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-4">
+                  <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </div>
+                <!-- /.col -->
+              </div>
+            </form>
+
+            <div class="social-auth-links text-center mb-3">
+              <p>- OR -</p>
+              <a href="#" class="btn btn-block btn-primary">
+                <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+              </a>
+              <a href="#" class="btn btn-block btn-danger">
+                <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+              </a>
+            </div>
+            <!-- /.social-auth-links -->
+
+            <p class="mb-1">
+              <a href="forgot-password.html">I forgot my password</a>
+            </p>
+            <p class="mb-0">
+              <a href="register.html" class="text-center">Register a new membership</a>
+            </p>
+          </div>
+          <!-- /.login-card-body -->
+        </div>
+      </div>
+      <!-- /.login-box -->
+    </div>
+    <!-- co -->
+
+
+    <footer id="footer-disp" class="main-footer" style="display: none;">
+      <strong>Copyright &copy; 2021-2022
+        <!--<a href="https://adminlte.io">AdminLTE.io</a>.-->.
+      </strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <b>Version</b> 3.2.0
+      </div>
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- jQuery -->
+  <script src="{{url_for('static',filename='js/jQuery.js')}}"></script>
+  <script src="{{url_for('static',filename='plugins/jquery/jquery.min.js')}}"></script>
+
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{{url_for('static',filename='plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="{{url_for('static',filename='plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+  <!-- ChartJS -->
+  <script src="{{url_for('static',filename='plugins/chart.js/Chart.min.js')}}"></script>
+
+  <!-- Sparkline -->
+  <script src="{{url_for('static',filename='plugins/sparklines/sparkline.js')}}"></script>
+
+  <!-- JQVMap -->
+  <script src="{{url_for('static',filename='plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+
+  <script src="{{url_for('static',filename='plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+
+  <!-- jQuery Knob Chart -->
+  <script src="{{url_for('static',filename='plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+
+  <!-- daterangepicker -->
+  <script src="{{url_for('static',filename='plugins/moment/moment.min.js')}}"></script>
+
+  <script src="{{url_for('static',filename='plugins/daterangepicker/daterangepicker.js')}}"></script>
+
+  <!-- Tempusdominus Bootstrap 4 -->
+  <script
+    src="{{url_for('static',filename='plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+  <!-- Summernote -->
+  <script src="{{url_for('static',filename='plugins/summernote/summernote-bs4.min.js')}}"></script>
+
+  <!-- overlayScrollbars -->
+  <script src="{{url_for('static',filename='plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+
+  <!-- AdminLTE App -->
+  <script src="{{url_for('static',filename='dist/js/adminlte.js')}}"></script>
+
+  <!-- AdminLTE for demo purposes -->
+  <script src="{{url_for('static',filename='dist/js/demo.js')}}"></script>
+
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="{{url_for('static',filename='dist/js/pages/dashboard.js')}}"></script>
+
+
+
+
+
+
+  <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="//cdn.jsdelivr.net/excanvas/r3/excanvas.compiled.js"></script>
+  <script src="http://cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
+
+
+  <script>
+    var acc = document.getElementsByClassName("accordion");
+    var panel = document.getElementsByClassName("panel");
+
+
+    acc.addEventListener("click", function () {
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+
+  </script>
+  <script src="{{url_for('static',filename='js/d3.v3.js')}}"></script>
+  <script type="text/javascript">
+
+
+    /**********************                                         ***************************/
+
+
+
+    var G;
+    var nodeArray;
+    var edgeArray;
+    var newlinkArray;
+    var allnewlinkArray;
+    var nodeColor = "#00f";
+    var linkColor = "#0f0";
+    var newlinkColor = "#f00";
+    var g_name;
+    var m_name;
+    var running = 0;
+    var w = "100%";
+    var h = document.getElementById("draw_here").style.height;
+    var time = 0;
+    var time_interval = 100;
+    var t_final = 100;
+    var dict_plot_links = {}
+    //*****************************************
+    function update_Sim_time() {
+      p = Number($("#Time_sime").val());
+      if (isNaN(p) || p < 0.0 || p > 2000) {
+        $("#Time_sime").css("background-color", "#f88");
+      } else {
+        time_interval = p;
+        $("#Time_sime").css("background-color", "#fff");
+      }
+    }
+    setInterval(update_Sim_time, time_interval);
+    /**************************************************************/
+    // div for onmouseover   
+    var div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+    var linkdiv = d3.select("body").append("div")
+      .attr("class", "linkdiv")
+      .style("opacity", 0);
+    /*******************************************************************/
+    var vis;
+    var force;
+    var x;
+    /****/
+    var drag = d3.behavior.drag()
+      .origin(function (d) { return d; })
+      .on("drag", dragged);
+    //**
+    function dragged(event, d) {
+      d3.select(this).attr("cx", d.x = event.clientX).attr("cy", d.y = event.y);
+    }
+    function clicked(event, d) {
+      if (event.defaultPrevented) return; // dragged
+    }
+
+    function load_graph() {
+      $('#select_btn').prop('disabled', true);
+      $('#start_btn').prop('disabled', false);
+
+      //g_name = document.getElementById("graphselect").value;
+      g_name = " ";
+      //console.log(g_name);
+      $.ajax({
+        //dataType: "json",
+        url: "/get_graph",
+        data: g_name,
+        success: function (result, status, xhr) {
+          G = result["graph"];
+          dict_plot_links = result["dict_plot_links"];
+          console.log("dict_plot_links");
+          console.log(dict_plot_links);
+          draw_graph1();
+          setInterval(update_graph, time_interval);
+          var count_nodes = G['nodes'].length;
+          var count_edges = G['links'].length;
+          console.log(count_nodes);
+          var max_degree = 0
+          var avg_degree = 0
+          for (i = 0; i < count_nodes; i++) {
+            avg_degree = avg_degree + G['nodes'][i].degree;
+            if (G['nodes'][i].degree > max_degree)
+              max_degree = G['nodes'][i].degree;
+          }
+          avg_degree = avg_degree / count_nodes;
+
+          //console.log('max degree ='+max_degree);
+
+
+          //document.getElementById("number_of_nodes").innerHTML = "number of nodes : "+count_nodes;
+
+
+          //document.getElementById("number_of_links").innerHTML = "number of links : "+count_edges;
+
+
+
+
+
+          document.getElementById("num_nodes-count11").innerHTML = "" + count_nodes;
+          document.getElementById("num_links-count").innerHTML = "" + count_edges;
+          document.getElementById("max_degree-count").innerHTML = "" + max_degree;
+          document.getElementById("avg_degree-count").innerHTML = "" + avg_degree.toFixed(2);
+          document.getElementById("diameter-count").innerHTML = "" + result["diameter"];
+          document.getElementById("kcore-count").innerHTML = "" + result["max_k_core"];
+          document.getElementById("density-count").innerHTML = "" + result["density"];
+          document.getElementById("max_betweenness-count").innerHTML = "" + result["max_betweenness"];
+          document.getElementById("triangles-count").innerHTML = "" + result["number_triangles"];
+          document.getElementById("max_pagerank-count").innerHTML = "" + result["max_pagerank"];
+          document.getElementById("mean_distance-count").innerHTML = "" + result["mean_distance"];
+          document.getElementById("assortativity-count").innerHTML = "" + result["assortativity"];
+          document.getElementById("number_of_communities-count").innerHTML = "" + result["number_of_communities"];
+          document.getElementById("max_triangles-count").innerHTML = "" + result["number_of_communities"];
+          document.getElementById("avg_triangles-count").innerHTML = "" + result["number_of_communities"];
+          document.getElementById("local_clustering-count").innerHTML = "0.09";
+          document.getElementById("global_clustering-count").innerHTML = "0.08";
+          document.getElementById("max_triangle_core-count").innerHTML = "53";
+          document.getElementById("chromatic_num-count").innerHTML = "11";
+          document.getElementById("max_indepset-count").innerHTML = "284";
+          document.getElementById("num_roles-count").innerHTML = "7";
+          document.getElementById("num_wl_labels-count").innerHTML = "594";
+          document.getElementById("wedges-count").innerHTML = "0.5M";
+          document.getElementById("2star-count").innerHTML = "0.5K";
+          document.getElementById("3-1edge-count").innerHTML = "1.2M";
+          document.getElementById("3-indep-count").innerHTML = "19M";
+          document.getElementById("4-clique-count").innerHTML = "576";
+          document.getElementById("4-chordal-cycle-count").innerHTML = "8K";
+          document.getElementById("4-traled-tri-count").innerHTML = "737K";
+          document.getElementById("4-cycle-count").innerHTML = "619K";
+          document.getElementById("3-star-count").innerHTML = "14M";
+          document.getElementById("4-path-count").innerHTML = "23M";
+          document.getElementById("4-triangle-count").innerHTML = "386K";
+          document.getElementById("4-2star-count").innerHTML = "429M";
+          document.getElementById("4-2edge-count").innerHTML = "8M";
+          document.getElementById("4-1edge-count").innerHTML = "628M";
+          document.getElementById("4-indep-count").innerHTML = "1.6B";
+          console.log("clique ");
+          console.log(result["all_clique"]);
+
+
+
+
+
+        }
+      });
+    }
+    // 
+
+
+    function initDefinitions(svg) {
+      svg.append('defs')
+        .append('marker')
+        .attr({
+          'id': 'arrowhead',
+          'viewBox': '-0 -5 10 10',
+          'refX': 30,
+          'refY': 0,
+          'orient': 'auto',
+          'markerWidth': 5,
+          'markerHeight': 5,
+          'xoverflow': 'visible'
+        })
+        .append('svg:path')
+        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+        .attr('fill', '#999')
+        .style('stroke', 'none');
+
+    }
+
+
+
+
+    //
+
+    function draw_graph1() {
+      // calculate nodes degres
+      // kArray = []; //nodes deg array 
+      nodeArray = G.nodes; //console.log(nodeArray);
+      edgeArray = G.links; //console.log(edgeArray);
+
+      vis = d3.select("#draw_here")//console.log(vis);
+        .append("svg:svg")
+        .attr("id", "graph_id_1")
+        .attr("width", w)
+        .attr("height", h)
+        .call(d3.behavior.zoom().on("zoom", function () {
+          vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        }))
+        .append("g");
+      if (G.directed == true) {
+        initDefinitions(vis);
+
+      }
+
+      force = d3.layout.force()
+        .charge(-200)
+        .linkStrength(0.5)
+        .friction(0.2)
+        .gravity(0.02)
+        .linkDistance(100)
+        .nodes(nodeArray)
+        .links(edgeArray)
+        .size([300, 300])
+        .start();
+
+
+      force.on("tick", function () {
+        vis.selectAll("line.link")
+          .attr("x1", function (d) { /*console.log(d);*/return d.source.x; })
+          .attr("y1", function (d) { return d.source.y; })
+          .attr("x2", function (d) { return d.target.x; })
+          .attr("y2", function (d) { return d.target.y; })
+          .style("stroke", linkColor);
+
+        if (G.directed == true) {
+          vis.attr('marker-end', 'url(#arrowhead)');
+
+        }
+
+
+
+
+
+        vis.selectAll("circle.node")
+          .attr("cx", function (d) { return d.x; })
+          .attr("cy", function (d) { return d.y; })
+          //.style("fill", nodeColor)
+          .call(drag)
+          //.style("stroke", "#fff")
+          .on("click", clicked);;
+
+      });
+      /*var circleElements =document.getElementsByClassName("node");
+      for (var i = 0; i < circleElements.length; i++) {
+        circleElements[i].style.stroke="#fff";*/
+
+
+    }
+
+    function initColorPreference() {
+      var circleElements = document.getElementsByClassName("node");
+
+      for (var i = 0; i < circleElements.length; i++) {
+        circleElements[i].style.fill = nodeColor;
+      }
+
+      var linkElements = document.getElementsByClassName("link");
+
+      for (var i = 0; i < linkElements.length; i++) {
+        linkElements[i].style.stroke = linkColor;
+
+        //   circleElements[i].setAttribute("style", "stroke: "+document.getElementById("link_color").value+";");
+      }
+    }
+
+    function erase_graph() {
+      $('svg').remove();
+      /*vis = d3.select("#draw_here")
+
+
+      vis.removeChild("svg");*/
+      console.log("erase_graph")
+    }
+
+
+
+
+
+    //  
+    function update_graph() {
+      // draw links
+      x = vis.selectAll("line.link").data(edgeArray, function (d) { return d.source.name + "-" + d.target.name; });
+      //console.log(x);
+      x.enter().insert("svg:line", "circle.node")
+        .attr("class", "link")
+        .attr("x1", function (d) {/*console.log(d);*/ return d.source.x; })
+        .attr("y1", function (d) { return d.source.y; })
+        .attr("x2", function (d) { return d.target.x; })
+        .attr("y2", function (d) { return d.target.y; })
+        .on("mouseover", function (d) {
+          linkdiv.transition()
+            .duration(200)
+            .style("opacity", .9);
+          linkdiv.html("source : " + d.source.name +
+            "<br/>" + "target : " + d.target.name)
+            .style("left", (d3.event.pageX + 50) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function (d) {
+          linkdiv.transition()
+            .duration(200)
+            .style("opacity", 0);
+        });
+      x.exit().remove();
+      //console.log("update links")
+
+      //draw nodes
+
+      ///// nodes' features extraction  /////
+
+
+
+
+      x = vis.selectAll("circle.node").data(nodeArray, function (d) { return d.name; });/*console.log(x);*/
+      x.enter().insert("svg:circle")
+        .attr("class", "node")
+        .attr("cx", function (d) { return d.x; })
+        .attr("cy", function (d) { return d.y; })
+        .attr("r", function (d) { return (4 * Math.sqrt(d.degree + 1)); })
+        .style("fill", "#00f")
+        .call(drag)///9.6
+        .on("click", clicked)
+        .on("mouseover", function (d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+
+
+
+          if (d.info_name != null)
+            info_name = d.info_name;
+          else
+            info_name = "null";
+
+          if (d.info_last_name != null)
+            info_last_name = d.info_last_name;
+          else
+            info_last_name = "null";
+
+          if (d.birthday_date != null)
+            birthday_date = d.birthday_date;
+          else
+            birthday_date = null;
+
+          div.html("<img src = \"{{ url_for('static', filename='img/profile.ico') }}\"/>" + "<br/>" +
+            "Node Id: " + d.name + "<br/>" + "Node degree: " + d.degree
+            + "<br/>" + "nom: " + info_name
+            + "<br/>" + "prénom: " + info_last_name
+            + "<br/>" + "date de naissance: " + birthday_date)
+            .style("left", (d3.event.pageX + 50) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function (d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+      x.exit().remove();
+      force.start();
+    }
+    //
+    function change_stroke_color() {
+      var circleElements = document.getElementsByClassName("node");
+
+      for (var i = 0; i < circleElements.length; i++) {
+        circleElements[i].style.stroke = document.getElementById("stroke_color").value;
+        //circleElements[i].setAttribute("style", " stroke: "+document.getElementById("stroke_color").value+";fill: "+document.getElementById("stroke_color").value+";");
+      }
+    }
+
+
+    function change_link_color() {
+      var circleElements = document.getElementsByClassName("link");
+
+      for (var i = 0; i < circleElements.length; i++) {
+        circleElements[i].style.stroke = document.getElementById("link_color").value;
+
+        //   circleElements[i].setAttribute("style", "stroke: "+document.getElementById("link_color").value+";");
+      }
+      //console.log("color");
+      //console.log(document.getElementById("link_color").value);
+    }
+
+    function change_node_color() {
+      var circleElements = document.getElementsByClassName("node");
+
+      for (var i = 0; i < circleElements.length; i++) {
+        circleElements[i].style.fill = document.getElementById("node_color").value;
+        // circleElements[i].setAttribute("style", "fill: "+document.getElementById("node_color").value+";");
+      }
+    }
+
+    function change_background_color() {
+      //document.getElementById("draw_here").style.background-color=document.getElementById("background_color").value;
+      //document.getElementById("new_graph").style.background-color=document.getElementById("background_color").value;
+      document.getElementById("draw_here").setAttribute("style", " background-color: " + document.getElementById("background_color").value);
+      document.getElementById("new_graph").setAttribute("style", " background-color: " + document.getElementById("background_color").value);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function transform() {
+      /*$('#select_btn').prop('disabled', true);
+      $('#start_btn').prop('disabled', false);
+
+      g_name = document.getElementById("graphselect").value;*/
+      // alert(fake_path.split("\\").pop())
+      data_ = document.getElementById('filen').value.split("\\").pop()
+      console.log("name of file ==" + document.getElementById('filen').value.split("\\").pop());
+      $.ajax({
+
+
+
+
+
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        url: "/transform",
+        data: JSON.stringify({ "nameOfFile": "" + data_ }),
+        dataType: "json",
+        success: function () {
+
+        }
+      });
+    }
+
+
+
+
+
+
+
+    /////////////////                           add node                     ////////////////////
+    function add_node() {
+      $.ajax({
+        dataType: "text",
+        url: "/add_node",
+        success: function (lines, status, xhr) {
+          /*G = file;
+          G1=file1;
+          console.log('slm');     
+          console.log(G1);
+          G.nodes.push({"name":document.getElementById('noeud').value,"degree":5,"info_name":document.getElementById('node_name').value,"info_last_name":document.getElementById('node_last_name').value,"birthday_date":document.getElementById('node_birthday').value});
+          console.log(G);*/
+          Lines = lines;
+          List_lines = [];
+          List_lines = Lines.split("#");
+
+          //console.log(Lines);
+          newline = document.getElementById('f_node_id').value + " " + document.getElementById('f_node_name').value + " " + document.getElementById('f_node_last_name').value + " " + document.getElementById('f_node_birth').value;
+          List_lines.push(newline);
+          for (i = 0; i < List_lines.length; i++)
+            List_lines[i] = List_lines[i] + "\n";
+
+
+          Lines = Lines + newline;
+
+          console.log("lines :" + Lines.split("#"));
+          //List_lines.remove('');
+          /*G1.WriteLine(""+document.getElementById('noeud').value+" "+document.getElementById('node_name').value+" "+document.getElementById('node_last_name').value+" "+document.getElementById('node_birthday').value);*/
+          // G["nodes"].push({"name":999,"degree":0});
+          //load_graph();
+          // setInterval(update_graph, time_interval);
+          $.ajax({
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            url: "/update_json",
+            data: JSON.stringify({ "Lines": List_lines }),
+            dataType: "json",
+          });
+          erase_graph();
+          transform();
+
+          $.load_graph();
+          console.log("node added");
+          masquer('add_node_form');
+
+
+
+        }
+      });
+      //$.ajax({load_graph();});
+    }
+
+
+
+
+
+
+    /////////////////////////////////   add links   ///////////////////////////////////////////
+
+    function add_link() {
+      dict = {}
+      $.ajax({
+        dataType: "json",
+        url: "/add_node",
+        success: function (file, status, xhr) {
+          G = file;
+          console.log('slm');
+          console.log(G);
+          bool1 = false;
+          bool2 = false;
+          id_node1 = document.getElementById('noeud1').value;
+          id_node2 = document.getElementById('noeud2').value;
+          for (i1 = 0; i1 < G.nodes.length; i1++) {
+            console.log(i1);
+            if (G.nodes[i1].name == id_node1) {
+              bool1 = true;
+              break;
+            }
+
+          }
+          for (i2 = 0; i2 < G.nodes.length; i2++) {
+            if (G.nodes[i2].name == id_node2) {
+              bool2 = true;
+
+              break;
+            }
+
+          }
+
+          if (bool1 == true && bool2 == true) {
+            console.log("dakhlet");
+
+
+
+            G.links.push({ "source": i1, "target": i2, "instance": 0 });
+          }
+          console.log(G);
+          // G["nodes"].push({"name":999,"degree":0});
+          //load_graph();
+          // setInterval(update_graph, time_interval);
+          $.ajax({
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            url: "/update_json",
+            data: JSON.stringify({ "nameF": G }),
+            dataType: "json",
+          });
+          erase_graph();
+
+          load_graph();
+          console.log("link added");
+          masquer('add_link_form');
+
+
+
+
+          /* dataType: "json",
+         url: "/add_link",
+         success: function (file, status, xhr) {
+           G = file;
+           console.log('slm');
+           for(i=0;i<G.nodes.length;i++)
+           {
+             dict[G.nodes[i].name]=i;
+             //console.log(G.nodes[i].name);
+           }*/
+          //console.log(dict);
+
+
+
+
+          //G.nodes.push({"source":dict[nom_noeud_source],"target":dict[nom_noeud_target]});
+          //erase_graph();
+
+          //load_graph();
+
+          $.ajax({
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            url: "/update_json",
+            data: JSON.stringify({ "nameF": G }),
+            dataType: "json",
+          });
+
+        }
+      });
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /*     $('#load_file').on('click', function() {
+     console.log($('#filen').prop('files'));
+
+     });*/
+
+
+
+
+
+
+    /////////////////////////////////////
+
+
+
+
+
+    /*  force2 */
+    /******************************************************************/
+
+    var vis2;
+    var force2;
+    var x2;
+    var G2;
+    var nodeArray2;
+    var edgeArray2;
+    //
+
+    function run_linkPrediction() {
+      $('#start_btn').prop('disabled', true);
+      $('#continue_btn').prop('disabled', false);
+      $('#pause_btn').prop('disabled', false);
+      $('#run-once').prop('disabled', false);
+      $.ajax({
+        dataType: "json",
+        url: "/run_linkPrediction",
+        data: m_name,
+        success: function (result, status, xhr) {
+          time++; //console.log(time);
+          document.getElementById("t-value").innerHTML = time;
+          G2 = result;
+          nodeArray2 = G2.nodes; //console.log(nodeArray2);
+          edgeArray2 = G2.links; //console.log(edgeArray2);
+          draw_graph2();
+          setInterval(update_graph2, time_interval);
+
+        }
+      });
+    }
+    function draw_graph2() {
+
+      vis2 = d3.select("#new_graph")
+        .append("svg:svg")
+        .attr("width", w)
+        .attr("height", h)
+        .call(d3.behavior.zoom().on("zoom", function () {
+          vis2.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        }))
+        .append("g");
+
+      force2 = d3.layout.force()
+        .charge(-200)
+        .linkStrength(0.5)
+        .friction(0.2)
+        .gravity(0.02)
+        .linkDistance(100)
+        .nodes(nodeArray2)
+        .links(edgeArray2)
+        .size([300, 300])
+        .start();
+
+
+      force2.on("tick", function () {
+        vis2.selectAll("line.link")
+          .attr("x1", function (d) { return d.source.x; })
+          .attr("y1", function (d) { return d.source.y; })
+          .attr("x2", function (d) { return d.target.x; })
+          .attr("y2", function (d) { return d.target.y; })
+          .style("display", function (d) {//n'afficher pas les liens futurs
+            if (d.instance > time) {
+              //console.log(d.instance);
+              return "none";
+            }
+          })
+          .style("stroke", function (d) {
+            if (d.instance != time) {
+              return linkColor;
+            }
+            else {
+              //console.log(d.instance);
+              //console.log(newlinkColor);
+              //console.log(d);
+              return newlinkColor;
+            }
+          })
+          .style("stroke-width", function (d) {
+            if (d.instance == time) {
+              return "5px";
+            }
+          });
+
+        vis2.selectAll("circle.node")
+          .attr("cx", function (d) { return d.x; })
+          .attr("cy", function (d) { return d.y; })
+            //.style("fill", nodeColor)
+          /*.style("opacity","0.5")*/;
+      });
+    }
+    function update_graph2() {
+      // draw links
+      x2 = vis2.selectAll("line.link").data(edgeArray2, function (d) { return d.source.name + "-" + d.target.name; });
+      x2.enter().insert("svg:line", "circle.node")
+        .attr("class", "link")
+        .attr("x1", function (d) {/*console.log(d);*/ return d.source.x; })
+        .attr("y1", function (d) { return d.source.y; })
+        .attr("x2", function (d) { return d.target.x; })
+        .attr("y2", function (d) { return d.target.y; })
+        .on("mouseover", function (d) {
+          linkdiv.transition()
+            .duration(200)
+            .style("opacity", .9);
+          linkdiv.html("source : " + d.source.name +
+            "<br/>" + "target : " + d.target.name)
+            .style("left", (d3.event.pageX + 50) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function (d) {
+          linkdiv.transition()
+            .duration(200)
+            .style("opacity", 0);
+        })
+        .call(force2.drag);
+      x2.exit().remove();
+      //console.log("update links")
+
+      //draw nodes
+      x2 = vis2.selectAll("circle.node").data(nodeArray2, function (d) { return d.name; });/*console.log(x);*/
+      x2.enter().insert("svg:circle")
+        .attr("class", "node")
+        .attr("cx", function (d) { return d.x; })
+        .attr("cy", function (d) { return d.y; })
+        .attr("r", function (d) { return 4 * Math.sqrt(d.degree); })
+        .style("fill", "#00f")
+        .call(force2.drag)
+        .on("click", function (d, i) {
+          // x.attr("fill", "#f00")
+        })
+        .on("mouseover", function (d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+
+
+          if (d.info_name != null)
+            info_name = d.info_name;
+          else
+            info_name = "null";
+
+          if (d.info_last_name != null)
+            info_last_name = d.info_last_name;
+          else
+            info_last_name = "null";
+
+          if (d.birthday_date != null)
+            birthday_date = d.birthday_date;
+          else
+            birthday_date = null;
+
+          div.html("<img src = \"{{ url_for('static', filename='img/profile.ico') }}\"/>" + "<br/>" +
+            "Node Id: " + d.name + "<br/>" + "Node degree: " + d.degree
+            + "<br/>" + "nom: " + info_name
+            + "<br/>" + "prénom: " + info_last_name
+            + "<br/>" + "date de naissance: " + birthday_date)
+            .style("left", (d3.event.pageX + 50) + "px")
+            .style("top", (d3.event.pageY - 50) + "px");
+
+
+        })
+        .on("mouseout", function (d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+      x2.exit().remove();
+      force2.start();
+    }
+
+    function continue_click() {
+      time++;
+      if (time == t_final) {
+        $('#continue_btn').prop('disabled', true);
+      }
+      document.getElementById("t-value").innerHTML = time;
+      timeseries.V.data.push([time, dict_plot_links[time]]);
+      //console.log($('#num_links-count').value);
+
+      update_plot();
+      //console.log(time);
+      document.getElementById("edge-number-value").innerHTML = parseInt(dict_plot_links[time]) - G['links'].length;
+    }
+
+    function reset() {
+      window.location.reload();
+    }
+    function run_once() {
+      $('#continue_btn').prop('disabled', true);
+      $('#pause_btn').prop('disabled', false);
+      timeseries.V.data.push(0, dict_plot_links[0]);
+      timeseries.V.data.push(1, dict_plot_links[1]);
+      setInterval(function () {
+        if (time != 100) {
+
+          time++;
+          document.getElementById("edge-number-value").innerHTML = parseInt(dict_plot_links[time]) - G['links'].length;
+        }
+        document.getElementById("t-value").innerHTML = time;
+        timeseries.V.data.push([time, dict_plot_links[time]]);
+        //console.log($('#num_links-count').value);
+
+        update_plot();
+        console.log(dict_plot_links[time]);
+
+
+      }, 1500);
+      // document.getElementById("edge-number-value").innerHTML=parseInt(dict_plot_links[100])-G['links'].length;
+    }
+    function visualiser(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    function masquer(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+
+
+
+
+    function handleBoxed(id) {/*
+    jQuery('.folder .dg ul').click(function(){
+      jQuery(this).addClass("active-switcher-btn");
+      jQuery(".wide-layout-btn").removeClass("active-switcher-btn");
+      jQuery("body").addClass("boxed-layout container");
+    });*/
+
+
+      if ($("#" + id).hasClass("closed")) { $("#" + id).removeClass("closed"); }
+      else {
+        $("#" + id).addClass("closed");
+      }
+    }
+
+    /*function svg_png(){
+     const svg=document.getElementById('graph_id_1');
+console.log("graph");
+     console.log(svg.viewBox.baseVal);
+     const {x,y,width,height}={0, 0 ,560, 240};
+     const blob = new Blob([svg.outerHTML], {type: 'image/svg+xml'});
+     const url=URL.createObjectURL(blob);
+     const image=document.createElement('img');
+     image.src=url;
+     image.addEventListener('load',() =>{
+       const canvas=document.createElement('canvas');
+       canvas.width=width;
+       canvas.height=height;
+       const context=canvas.getContext('2d');
+       context.drawImage(image,x,y,width,height);
+       const link=document.getElementById('link');
+       link.href=canvas.toDataURL();
+       URL.revokeObjectURL(url);
+     });
+
+
+}*/
+
+    /*const svg='<svg version="1.1" baseProfile="full" width="300" height="200" xmlns="http://www.w3.org/2000/svg"> <rect width="100%" height="100%" fill="red" /> <circle cx="150" cy="100" r="80" fill="green" /> <text x="150" y="125" font-size="60" text-anchor="middle" fill="white">SVG</text></svg>'
+    svgToPng(svg,(imgData)=>{
+        const pngImage = document.createElement('img');
+        document.body.appendChild(pngImage);
+        pngImage.src=imgData;
+    }); 
+    /////////////////
+    
+     function svgToPng(svg, callback) {
+        const url = getSvgUrl(svg);
+        svgUrlToPng(url, (imgData) => {
+            callback(imgData);
+            URL.revokeObjectURL(url);
+        });
+    }
+    function getSvgUrl(svg) {
+        return  URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+    }
+    function svgUrlToPng(svgUrl, callback) {
+        const svgImage = document.createElement('img');
+        // imgPreview.style.position = 'absolute';
+        // imgPreview.style.top = '-9999px';
+        document.body.appendChild(svgImage);
+        svgImage.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = svgImage.clientWidth;
+            canvas.height = svgImage.clientHeight;
+            const canvasCtx = canvas.getContext('2d');
+            canvasCtx.drawImage(svgImage, 0, 0);
+            const imgData = canvas.toDataURL('image/png');
+            callback(imgData);
+            // document.body.removeChild(imgPreview);
+        };
+        svgImage.src = svgUrl;
+     }
+    
+    function svg_png(){ 
+      const svg="<svg>"+document.getElementById("graph_id_1").firstChild.innerHTML+"</svg>";
+      console.log(svg);
+      //svg='<svg version="1.1" baseProfile="full" width="300" height="200" xmlns="http://www.w3.org/2000/svg"> <rect width="100%" height="100%" fill="red" /> <circle cx="150" cy="100" r="80" fill="green" /> <text x="150" y="125" font-size="60" text-anchor="middle" fill="white">SVG</text></svg>';
+      svgToPng(svg ,(imgData)=>{
+        const pngImage = document.createElement('img');
+        document.body.appendChild(pngImage);
+        pngImage.src=imgData;
+    });
+    
+    }*/
+
+
+    /*console.log("input svg hh");
+        console.log(document.getElementById("graph_id_1"));
+  
+        svgExport.downloadPng(
+    // SVG ID
+    "#graph_id_1",
+    // Fille name
+    "graph",
+    {
+      // options here
+    }
+  );
+  }
+  
+        console.log("input svg hh");
+        console.log(document.getElementById("graph_id_1"));
+  
+        svgExport.downloadPng(
+    // SVG ID
+    "#graph_id_1",
+    // Fille name
+    "graph",
+    {
+      // options here
+    }
+  );*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**********************     *******************************************************/
+
+
+    var count = 0;
+    var sir_color = { V: "#0000ff", I: "#ff0000", R: "#08b808", RuP: "#0f00f0" };
+    var epi_state = { V: 0, I: 0, R: 0, OpP: 0, OpD: 0, RuP: 0 };
+    var Opinion_color = { N: "#0000ff", Su: "#039b8b", D: "#bbb01b" };
+
+    function reset_history() {
+      timeseries = {
+        V: { label: "V", color: sir_color.V, data: [] }
+      };
+
+      //timeseries.V.data.push([count, 0]);
+    }
+
+    reset_history();
+
+    var plotOptions = {
+      lines: { show: true },
+
+      xaxis: { min: 0 },
+      series: { shadowSize: 0 }
+
+    };
+    var plot = $.plot($("#epicurves"), [], plotOptions);
+    //timeseries.V.data.push(0,);
+
+
+    function update_plot() {
+      plot.setData([timeseries.V]);
+      plot.setupGrid();
+      plot.draw();
+      console.log("update_plot");
+
+    }
+    update_plot();
+
+
+    function save_img_file_png() {
+      $.ajax({
+        dataType: "json",
+        url: "/save_in_file_png",
+        success: function (file, status, xhr) {
+
+        }
+      });
+    }
+
+
+    function save_img_file_pdf() {
+      $.ajax({
+        dataType: "json",
+        url: "/save_in_file_pdf",
+        success: function (file, status, xhr) {
+
+        }
+      });
+    }
+
+    function save_img_file_jpeg() {
+      $.ajax({
+        dataType: "json",
+        url: "/save_in_file_jpeg",
+        success: function (file, status, xhr) {
+
+        }
+      });
+    }
+
+
+    function save_img_file_svg() {
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        url: "/save_in_file_svg",
+        //data: "svg_text":"<svg>"+document.getElementById("graph_id_1").firstChild.innerHTML+"</svg>",
+        data: JSON.stringify({ "svg_text": "<svg 'width'= '100%' height='100%'>" + document.getElementById("graph_id_1").firstChild.innerHTML + "</svg>" }),
+        success: function (file, status, xhr) {
+
+        }
+      });
+    }
+
+
+
+    function generate_graph() {
+      var node_num = document.getElementById("node_numbre_gen").value;
+      var edge_num = document.getElementById("edge_numbre_gen").value;
+      var methode_gen = document.getElementById("methode_gen").value;
+
+      if (node_num != null && edge_num != null && methode_gen != null) {
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json;charset=UTF-8',
+          dataType: "json",
+          url: "/generate_graph",
+          data: JSON.stringify({ "node_num": node_num, "edge_num": edge_num, "methode_gen": methode_gen }),
+          success: function (file, status, xhr) {
+
+
+          }
+        });
+
+      }
+
+
+
+    }
+
+    function submit_choice() {
+      document.getElementById("content-prediction-last").style.display = "none";
+      document.getElementById("content-prediction").style.display = "block";
+
+      var sel = document.getElementById('graphselect');
+      var opt = sel.options[sel.selectedIndex];
+      console.log('selected value');
+      console.log(opt.value);
+
+
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        url: "/load_graph_from_database",
+        dataType: "json",
+        data: JSON.stringify({ "graph_name": opt.value }),
+
+        success: function (result, status, xhr) {
+          G = result["list_graph"];
+          console.log(G);
+          for (i = 0; i < G.length; i++) {
+            var node = document.createElement("option");
+            node.setAttribute('value', G[i]);
+
+            node.innerHTML = G[i];
+            document.getElementById('graphselect').appendChild(node);
+
+          }
+        }
+      });
+
+
+    }
+
+    function change_method() {
+      document.getElementById("content-prediction-last").style.display = "block";
+      document.getElementById("content-prediction").style.display = "none";
+    }
+
+
+  </script>
+  <script>
+    //document.getElementById('graphselect').appendChild();
+
+    function get_graphs() {
+
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        url: "/get_graphs",
+        success: function (result, status, xhr) {
+          G = result["list_graph"];
+          console.log(G);
+          for (i = 0; i < G.length; i++) {
+            var node = document.createElement("option");
+            node.setAttribute('value', G[i]);
+
+            node.innerHTML = G[i];
+            document.getElementById('graphselect').appendChild(node);
+
+          }
+        }
+      });
+
+    }
+    get_graphs();
+
+
+
+
+
+
+
+  </script>
+
+  <script>
+    var acc = document.getElementsByClassName("accordion");
+    var panel = document.getElementsByClassName("panel");
+
+
+    acc.addEventListener("click", function () {
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>

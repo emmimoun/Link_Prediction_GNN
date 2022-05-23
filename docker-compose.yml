@@ -1,0 +1,57 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql
+    container_name: aymen_med_db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: python_login
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - 'aymen_med_db:/crafterZos/aymen_med/data'
+  neo4j:
+    image: neo4j:3.5
+    restart: unless-stopped
+    container_name: neo4j-graph
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./conf:/conf
+      - ./data:/data
+      - ./import:/import
+      - ./logs:/logs
+      - ./plugins:/plugins
+    environment:
+      # NEO4J_AUTH=user/password
+      - NEO4J_AUTH=admin/admin
+      # Raise memory limits
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms.memory.heap.initial_size=1G
+      - NEO4J_dbms_memory_heap_max__size=1G
+    networks:
+      - aymen_med_net
+  storage-server:
+    build: link-prediction-app/
+    image: aymen_med/link-prediction-app:latest
+    container_name: aymen_med-link-prediction-app
+    hostname: aymen_med-social-storage
+    ports:
+      - ${STORAGE_PORT_EXT}:5000
+    networks:
+      - aymen_med_net
+    # for dev reasons..
+    volumes:
+      - ./link-prediction-app/:/code
+networks:
+  aymen_med_net:
+    name: aymen_med_net
+    driver: bridge
+volumes:
+  phoros_db:
+    driver: aymen_med_db 
