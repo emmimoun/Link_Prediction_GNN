@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -985,8 +985,8 @@ def login():
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['id'] = account['id']
-            session['username'] = account['username']
-			
+            session['username'] = account['username'];cursor.execute('INSERT INTO `historique` (`id`, `action`, `the_time`, `type_d_action`) VALUES (%s,%s,%s,%s)', (session['id'], 'login', str(datetime.now()), 'login'));mysql.connection.commit()
+        
             # Redirect to home page
             return redirect(url_for('profile'))
         else:
@@ -998,12 +998,9 @@ def login():
 # http://localhost:5000/python/logout - this will be the logout page
 @app.route('/pythonlogin/logout')
 def logout():
+	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     # Remove session data, this will log the user out
-   session.pop('loggedin', False)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return redirect(url_for('login'))
+	cursor.execute('INSERT INTO `historique` (`id`, `action`, `the_time`, `type_d_action`) VALUES (%s,%s,%s,%s)', (session['id'], 'logout', str(datetime.now()), 'logout'));mysql.connection.commit(); session.pop('loggedin', False);session.pop('id', None);	session.pop('username', None);return redirect(url_for('login'))
 
 
 # http://localhost:5000/pythonlogin/register - this will be the registration page, we need to use both GET and POST requests
@@ -1032,7 +1029,7 @@ def register():
             msg = 'Please fill out the form!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s)', (username, password, email,))
+            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s)', (username, password, email,));cursor.execute('INSERT INTO `historique` (`id`, `action`, `the_time`, `type_d_action`) VALUES (%s,%s,%s,%s)', (session['id'], 'add user : '+username, str(datetime.now()), 'add user'))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -1050,7 +1047,7 @@ def add_graph():
     msg = '';print(request.form);print('username',session)
 	#;print('graph',request.form	)
     
-	# nchofo ida account yexisty b MySQL --- donc POST ( form mriigla )
+	# nchofo ida account y existy b MySQL --- donc POST ( form mriigla )
 	
     if request.method == 'POST' and 'nodes_file' in request.form and 'graphname' in request.form and 'edges_file' in request.form:
         #  variables username password email
@@ -1069,11 +1066,7 @@ def add_graph():
         elif not graphname or not nodes_file or not edges_file:
             msg = 'Please fill out the form!'
         else:
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            #cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s)', (username, password, email,))
-            
-            mysql.connection.commit()
+            cursor.execute('INSERT INTO `base_de_donnes_de_graphe` (`id`, `nom_de_base_de_donnes`, `date_de_creation`, `date_de_derniere_modification`) VALUES (%s, %s, %s, %s)', (session['id'], graphname, str(datetime.now()), str(datetime.now())));mygraph=connect_to_graph.initGraph();connect_to_graph.create_or_replace_database(mygraph,database_name=graphname);mygraph=connect_to_graph.use_database(mygraph,graphname);connect_to_graph.txt_to_graph(mygraph,nodes_file_txt=nodes_file,edges_file_txt=edges_file);cursor.execute('INSERT INTO `python_login`.`historique` (`id`, `action`, `the_time`, `type_d_action`)  VALUES (%s, %s, %s, %s)', (session['id'], 'add graph '+graphname, str(datetime.now()),'database'));mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         # Form khawiya... (makan lah ndiiro POST)

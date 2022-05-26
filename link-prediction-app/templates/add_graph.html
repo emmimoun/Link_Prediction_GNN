@@ -9,7 +9,7 @@
 </head>
 
 <body>
-	
+
 
 	<div class="register">
 		<h1>Add Graph</h1>
@@ -23,14 +23,16 @@
 			</label>
 			<input type="text" name="graphname" placeholder="Graph Name" id="graphname" required>
 
-			<label for="nodes_file"> Select a nodes file to upload</label>
+			<h5> Select a nodes file to upload</h5>
 
-			<input placeholder="Graph Name" type="file" name="nodes_file" value="nodes_file" id="nodes_file"> 
-			
-			<label for="edges_file"> Select an edges file to upload</label>
-
-			<input placeholder="Graph Name" type="file" name="edges_file" value="edges_file" id="edges_file"> 
-			
+			<input placeholder="Graph Name" type="file" name="nodes_file" value="nodes_file" id="nodes_file">
+		
+				<h5> Select an edges file to upload</h5>
+			<br>
+			<div>
+				<input placeholder="Graph Name" type="file" name="edges_file" value="edges_file"
+					id="edges_file">
+			</div>
 			<div class="msg">{{ msg }}</div>
 			<input type="submit" value="Add Graph">
 		</form>

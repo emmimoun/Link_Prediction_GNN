@@ -1,3 +1,4 @@
+import os
 from neo4j import GraphDatabase
 import networks as nxj
 from networks import community
@@ -52,8 +53,13 @@ def txt_to_graph(mygraph,nodes_file_txt="nodes.txt",edges_file_txt="edges.txt"):
     mygraph.identifier_property = 'identifiant'
     mygraph.relationship_type = '-'
     mygraph.node_label = 'Personne'
-    FNodes = csv.reader(open(nodes_file_txt),delimiter='\n')
-    FEdges = csv.reader(open(edges_file_txt),delimiter='\n')
+    
+    print(os.listdir())
+    N=open(nodes_file_txt)
+    E=open(edges_file_txt)
+    FNodes = csv.reader(N,delimiter='\n')
+    FEdges = csv.reader(E,delimiter='\n')
+    print('mygraph.delete_all()')
     mygraph.delete_all()
     for row in FNodes:
         rowlist=row[0].split(' ')
@@ -65,6 +71,7 @@ def txt_to_graph(mygraph,nodes_file_txt="nodes.txt",edges_file_txt="edges.txt"):
     for row in FEdges:
         rowlist=row[0].split(' ')
         mygraph.add_edge(rowlist[0],rowlist[1],timpstamp=rowlist[2],bool10=rowlist[3])
+    print('graph added')
 
 def graph_to_txt(mygraph,file_edges_from_neo4j="edges_tompon.txt",file_nodes_from_neo4j="nodes_tompon.txt"):
     mynodes,myedges=get_graph_list(mygraph)
