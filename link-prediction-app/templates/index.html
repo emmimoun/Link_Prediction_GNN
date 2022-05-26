@@ -397,7 +397,10 @@
         {% endif %}
         
         {% if session['loggedin'] == True %}
-        <a class="btn btn-primary" id="logout_btn" type="submit" href="{{ url_for('login') }}">Logout</a  >
+        <a class="btn btn-primary" id="logout_btn" type="submit" href="{{ url_for('login') }}">Logout</a>
+        --
+        <a class="btn btn-primary" id="profile_btn" type="submit" href="{{ url_for('profile') }}">Profile</a  >
+          
         {% endif %}
         
         <li class="nav-item">
